@@ -44,10 +44,10 @@ namespace HKUECT {
 							if (success != null)
 								success((string)m.Data [0]);
 
-							if (autoLoadScene && !string.IsNullOrEmpty(targetScene.sceneName)) {
-								SceneManager.LoadScene(targetScene.sceneName);
-							}
-						} else if (m.Address == HANDSHAKE_BADIP) {
+                            if (autoLoadScene && !string.IsNullOrEmpty(targetScene.sceneName)) {
+                                doLoad = true;
+                            }
+                        } else if (m.Address == HANDSHAKE_BADIP) {
 							DoError("Bad IP Reply");
 							cancelRetry = true;
 						} else {
@@ -56,8 +56,8 @@ namespace HKUECT {
 					}
 				};
 			}
-
-			DoHandshake();
+            
+            DoHandshake();
 		}
 
 		#endregion
@@ -70,10 +70,18 @@ namespace HKUECT {
 		float scale;
 		IPAddress serverIP;
 		bool cancelRetry = false;
+        bool doLoad = false;
 
 		#endregion
 
 		#region private methods
+
+        void Update() {
+            if ( doLoad ) { 
+                SceneManager.LoadScene(targetScene.sceneName);
+                doLoad = false;
+            }
+        }
 
 		void DoError(string err) {
 			if (error != null) {
