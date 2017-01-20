@@ -72,12 +72,12 @@ One of the challenges with vertical walking is to make sure you don't detach the
 ### Handshaking Gear VRs
 The GearVRHandshaker script will allow you to communicate with the GearVR-OSC-Handshaker ofxApp, and this is to let you know who you are.
 
-Imagine being in the space with four people, all running the same Unity scene, but each of them has a differently tracked rigidbody (we tracked their headphones in this case). A reliable way to link people to their headsets, is to use a statis IP-Address of their phones' wifi connection (that we use to send them the OSC data).
+Imagine being in the space with four people, all running the same Unity scene, but each of them needs to be linked to a different tracked rigidbody (their headphones, for example). A reliable way to link a GearVR to a rigidbody, is to use a static IP-Address of the phones' wifi connection (that we use to send them the OSC data).
 
 Once the Handshaker is "kicked", it sends a handshake message to the ofxApp (you need to set the IP of that computer in the scene). If the ofxApp recognizes the IP-Address, it will send back the appropriate rigidbody name. Once that name is received, the Unity application knows who it is, and can act accordingly. So to recap, make sure:
 
 * Your IP-Address doesn't change
-* You have the correct Handeshake IP set in the scene (of the computer running the handshaker ofxApp)
+* You have the correct Handshake IP set in the scene (of the computer running the Handshaker ofxApp)
 * Both the Handshaker ofxApp and the NatNet2OSCBridge have your computer's IP-Address set-up
 
 ### Mapping full OSC Skeleton data onto Humanoid Mecanim Avatars
