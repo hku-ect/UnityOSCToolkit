@@ -9,10 +9,13 @@ namespace HKUECT {
 	/// Add this to an empty GameObject, and enter the desired name and prefab to be spawned for the Rigidbody.
 	/// </remarks>
 	public class OptitrackRigidbody : MonoBehaviour {
+		public delegate void RigidbodyEvent( OptitrackRigidbody rb );
+
 		const int MAX_FRAMES_UNTRACKED = 60;
 
 		public string rigidbodyName = "";
 		public Object prefab;
+		public event RigidbodyEvent onPostUpdate;
 
 		[Tooltip("If it is not sent by Motive")]
 		public bool deactiveWhenMissing = true;
@@ -34,6 +37,8 @@ namespace HKUECT {
 		protected virtual void ApplyTransformUpdate(Vector3 position, Quaternion rotation) {
 			t.position = def.position;
 			t.rotation = def.rotation;
+
+			if ( onPostUpdate != null ) onPostUpdate(this);
 		}
 
 		// Use this for initialization

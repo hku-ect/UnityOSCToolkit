@@ -14,7 +14,7 @@ namespace HKUECT {
 	}
 
 	/// <summary>
-	/// This class is used with GearVR + motion capture setups
+	/// Controls tracking of the rigidbody of a motion-captured GearVR (all of them, so not just the player)
 	/// </summary>
 	/// <remarks>
 	/// Requires handshaking with the GearVR Handshaker on http://github.com/hku-ect
@@ -25,6 +25,14 @@ namespace HKUECT {
 		public bool verticalWalking = false;
 		public bool canFall = false;
 		public bool withAccelleration = false;
+
+		/// <summary>
+		/// Relative rigidbodies will follow along with this object's y-offset when verticalWalking is enabled.
+		/// </summary>
+		/// <remarks>
+		/// This has primarily been used to attach virtual hands to the person wearing the GearVR's.
+		/// </remarks>
+		public List<OptitrackRigidbody> relativeBodies = new List<OptitrackRigidbody>();
 
 		#region private members
 
@@ -44,6 +52,16 @@ namespace HKUECT {
 		#endregion
 
 		#region protected methods
+
+		protected virtual void Awake() {
+			//we do this in awake to pre-empt any setup by targeted Rigidbodies
+			if ( verticalWalking ) {
+				//register to post update event
+				for( int i = 0; i < relativeBodies.Count; ++i ) {
+					relativeBodies[i].onPostUpdate += HandleLinkedRigidbody;
+				}
+			}
+		}
 
 		protected override void Start() {
 			handShakedName = GearData.playerObjectName;
@@ -177,6 +195,16 @@ namespace HKUECT {
 
 				t.position = p;
 			}
+		}
+
+		void HandleLinkedRigidbody( OptitrackRigidbody rb ) {
+			Vector3 p = rb.transform.position;
+
+			float yOffset = OptiTrackOSCClient.GetPosition().y;
+			float diff = physicalY - ( p.y - yOffset );
+			p.y += t.position.y + diff;
+
+			rb.transform.position = p;
 		}
 
 		#endregion
