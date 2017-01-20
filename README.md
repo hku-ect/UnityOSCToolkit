@@ -61,7 +61,7 @@ You can find each of these in the example scene that's part of the source, and w
 
 You can use the <b>OptiTrackOSCGearVR</b> class to use Motion Capture in combination with a GearVR, or any other similar type of situation.
 
-Vertical walking means you can move up/down in virtual space, whilst walking on a flat surface in the real world. This works through a combination of raycasting and gravity. As you walk, the script will check if the floor below your feet is moving towards you. If so, it will push you up accordingly.
+Vertical walking means you can move up/down in virtual space, whilst walking on a flat surface in the real world. This works through a combination of raycasting and gravity. As you walk, the script will check if the floor below your feet is moving towards you (this requires the collider to be on the layer "Floor" that we've set up). If so, it will push you up accordingly.
 
 If you set the booleans in the inspector to allow for falling (with or without gravitational accelleration), you can also step off of ledges and fall as you would expect. Note that this position is attached to the head of the player, so looking over the edge will make you fall down as well.
 
@@ -70,7 +70,15 @@ If you set the booleans in the inspector to allow for falling (with or without g
 One of the challenges with vertical walking is to make sure you don't detach the player's head (the GearVR) from other objects he/she is holding. To solve this we've added the ability to set <b>relative bodies</b> (OptitrackRigidbody) on the OptitrackOSCGearVR class. Once these other objects are tracked, they will ping the GearVR to update them to the correct relative height.
 
 ### Handshaking Gear VRs
-TODO
+The GearVRHandshaker script will allow you to communicate with the GearVR-OSC-Handshaker ofxApp, and this is to let you know who you are.
+
+Imagine being in the space with four people, all running the same Unity scene, but each of them has a differently tracked rigidbody (we tracked their headphones in this case). A reliable way to link people to their headsets, is to use a statis IP-Address of their phones' wifi connection (that we use to send them the OSC data).
+
+Once the Handshaker is "kicked", it sends a handshake message to the ofxApp (you need to set the IP of that computer in the scene). If the ofxApp recognizes the IP-Address, it will send back the appropriate rigidbody name. Once that name is received, the Unity application knows who it is, and can act accordingly. So to recap, make sure:
+
+* Your IP-Address doesn't change
+* You have the correct Handeshake IP set in the scene (of the computer running the handshaker ofxApp)
+* Both the Handshaker ofxApp and the NatNet2OSCBridge have your computer's IP-Address set-up
 
 ### Mapping full OSC Skeleton data onto Humanoid Mecanim Avatars
 TODO
