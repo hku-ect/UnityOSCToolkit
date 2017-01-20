@@ -81,10 +81,17 @@ Once the Handshaker is "kicked", it sends a handshake message to the ofxApp (you
 * Both the Handshaker ofxApp and the NatNet2OSCBridge have your computer's IP-Address set-up
 
 ### Mapping full OSC Skeleton data onto Humanoid Mecanim Avatars
-TODO
+If you have pre-recorded data or have put a person into a full mocap suit, you can map this data to an Avatar in Unity. This avatar needs to be a humanoid character, and the character model must be imported in this way for it to work.
+
+The OptitrackSkeletonAnimator should replace the SkeletonAnimator component that an imported character contains when placed in the scene, and once the correct Avatar is linked should do its thing entirely unattended.
 
 ### Tracking Rigidbodies as predefined prefabs (single/groups)
-TODO
+Once you've added rigidbodies to Motive, you can link these to prefabs in the Unity project, either as a group or as invididual objects. The group setup is especially useful if you have a large number of objects that might clutter the scene unnecessarily, and don't require any special interaction or setup. An example of special interaction would be if they are linked as "relative bodies" to a GearVR.
+
+Setting these up is done as follows:
+* Create an empty GameObject
+* Add the appropriate script (OptitrackRigidbody or OptitrackRigidbodyGroup)
+* Set the correct rigidobdy name(s) and prefab(s)
 
 ### Selectively tracking Rigidbodies as predefined prefabs
-TODO
+If you want to track rigidbodies in a specific way (only rotations or positions, or only some axes), you can use the OptitrackSelectiveRigidbody script. Set it up as you would a normal rigidbody, and simply apply the settings that you want.
