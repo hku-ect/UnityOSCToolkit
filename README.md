@@ -95,3 +95,31 @@ Setting these up is done as follows:
 
 ### Selectively tracking Rigidbodies as predefined prefabs
 If you want to track rigidbodies in a specific way (only rotations or positions, or only some axes), you can use the OptitrackSelectiveRigidbody script. Set it up as you would a normal rigidbody, and simply apply the settings that you want.
+
+# How to run a Unity application on the GearVR
+
+First let’s download and instal the prerequisites:
+
+1. Make sure you have Unity 5.x installed with android built support 
+ * (https://unity3d.com/get-unity/download)
+2. Download and install Android studio, so Unity can use the Android SDK (https://developer.android.com/studio/index.html)
+ * Also note/save the location where the SDK is installed you need to tell this to Unity
+3. Download and install the Java Development Kit (http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
+4. Download an install Oculus mobile sdk (https://developer3.oculus.com/downloads/)
+5. Get the OSIG signature of your android phone (https://dashboard.oculus.com/tools/osig-generator/)
+ * Please note that you need a Oculus account to acces the page, which is free
+ * you need to run de ADB tool from a terminal/command prompt. You can find the command in de android SDK directory and then “platform-tools"
+
+Then let’s start in Unity:
+
+1. Start new 3D Unity project
+2. Go to “Edit” -> “Project Settings” -> “Player Settings"
+3. In the Settings for Android:
+ * select box: "Virtual Reality Supported” (you should see Virtual Reality SDK’s -> Oculus if not make sure you installed the Oculus mobile SDK)
+  * Set your bundle identifier, for example com.mycompanyname.projectname
+4. Create your Unity Scene
+5. Go to “File” -> “build settings” and switch platform to “Android"
+6. Set texture compression to “ETC2 (GL 3.0)"
+7. Make sure the Android phone is connected to your computer with the USB cable and enable USB Debugging (http://www.greenbot.com/article/2457986/how-to-enable-developer-options-on-your-android-phone-or-tablet.html)
+8. Click “Build and Run” and the scene will built on your phone.
+9. When the app starts for the first time you might need to allow acces for the app on the phone.
