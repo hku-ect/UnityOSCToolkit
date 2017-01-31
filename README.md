@@ -61,7 +61,7 @@ You can find each of these in the example scene that's part of the source, and w
 
 You can use the <b>OptiTrackOSCGearVR</b> class to use Motion Capture in combination with a GearVR, or any other similar type of situation.
 
-Vertical walking means you can move up/down in virtual space, whilst walking on a flat surface in the real world. This works through a combination of raycasting and gravity. As you walk, the script will check if the floor below your feet is moving towards you. If so, it will push you up accordingly.
+Vertical walking means you can move up/down in virtual space, whilst walking on a flat surface in the real world. This works through a combination of raycasting and gravity. As you walk, the script will check if the floor below your feet is moving towards you (this requires the collider to be on the layer "Floor" that we've set up). If so, it will push you up accordingly.
 
 If you set the booleans in the inspector to allow for falling (with or without gravitational accelleration), you can also step off of ledges and fall as you would expect. Note that this position is attached to the head of the player, so looking over the edge will make you fall down as well.
 
@@ -70,13 +70,56 @@ If you set the booleans in the inspector to allow for falling (with or without g
 One of the challenges with vertical walking is to make sure you don't detach the player's head (the GearVR) from other objects he/she is holding. To solve this we've added the ability to set <b>relative bodies</b> (OptitrackRigidbody) on the OptitrackOSCGearVR class. Once these other objects are tracked, they will ping the GearVR to update them to the correct relative height.
 
 ### Handshaking Gear VRs
-TODO
+The GearVRHandshaker script will allow you to communicate with the GearVR-OSC-Handshaker ofxApp, and this is to let you know who you are.
+
+Imagine being in the space with four people, all running the same Unity scene, but each of them needs to be linked to a different tracked rigidbody (their headphones, for example). A reliable way to link a GearVR to a rigidbody, is to use a static IP-Address of the phones' wifi connection (that we use to send them the OSC data).
+
+Once the Handshaker is "kicked", it sends a handshake message to the ofxApp (you need to set the IP of that computer in the scene). If the ofxApp recognizes the IP-Address, it will send back the appropriate rigidbody name. Once that name is received, the Unity application knows who it is, and can act accordingly. So to recap, make sure:
+
+* Your IP-Address doesn't change
+* You have the correct Handshake IP set in the scene (of the computer running the Handshaker ofxApp)
+* Both the Handshaker ofxApp and the NatNet2OSCBridge have your computer's IP-Address set-up
 
 ### Mapping full OSC Skeleton data onto Humanoid Mecanim Avatars
-TODO
+If you have pre-recorded data or have put a person into a full mocap suit, you can map this data to an Avatar in Unity. This avatar needs to be a humanoid character, and the character model must be imported in this way for it to work.
+
+The OptitrackSkeletonAnimator should replace the SkeletonAnimator component that an imported character contains when placed in the scene, and once the correct Avatar is linked should do its thing entirely unattended.
 
 ### Tracking Rigidbodies as predefined prefabs (single/groups)
-TODO
+Once you've added rigidbodies to Motive, you can link these to prefabs in the Unity project, either as a group or as invididual objects. The group setup is especially useful if you have a large number of objects that might clutter the scene unnecessarily, and don't require any special interaction or setup. An example of special interaction would be if they are linked as "relative bodies" to a GearVR.
+
+Setting these up is done as follows:
+* Create an empty GameObject
+* Add the appropriate script (OptitrackRigidbody or OptitrackRigidbodyGroup)
+* Set the correct rigidobdy name(s) and prefab(s)
 
 ### Selectively tracking Rigidbodies as predefined prefabs
-TODO
+If you want to track rigidbodies in a specific way (only rotations or positions, or only some axes), you can use the OptitrackSelectiveRigidbody script. Set it up as you would a normal rigidbody, and simply apply the settings that you want.
+
+# How to run a Unity application on the GearVR
+
+First let’s download and instal the prerequisites:
+
+1. Make sure you have Unity 5.x installed with android built support 
+ * (https://unity3d.com/get-unity/download)
+2. Download and install Android studio, so Unity can use the Android SDK (https://developer.android.com/studio/index.html)
+ * Also note/save the location where the SDK is installed you need to tell this to Unity
+3. Download and install the Java Development Kit (http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
+4. Download an install Oculus mobile sdk (https://developer3.oculus.com/downloads/)
+5. Get the OSIG signature of your android phone (https://dashboard.oculus.com/tools/osig-generator/)
+ * Please note that you need a Oculus account to acces the page, which is free
+ * you need to run de ADB tool from a terminal/command prompt. You can find the command in de android SDK directory and then “platform-tools"
+
+Then let’s start in Unity:
+
+1. Start new 3D Unity project
+2. Go to “Edit” -> “Project Settings” -> “Player Settings"
+3. In the Settings for Android:
+ * select box: "Virtual Reality Supported” (you should see Virtual Reality SDK’s -> Oculus if not make sure you installed the Oculus mobile SDK)
+  * Set your bundle identifier, for example com.mycompanyname.projectname
+4. Create your Unity Scene
+5. Go to “File” -> “build settings” and switch platform to “Android"
+6. Set texture compression to “ETC2 (GL 3.0)"
+7. Make sure the Android phone is connected to your computer with the USB cable and enable USB Debugging (http://www.greenbot.com/article/2457986/how-to-enable-developer-options-on-your-android-phone-or-tablet.html)
+8. Click “Build and Run” and the scene will built on your phone.
+9. When the app starts for the first time you might need to allow acces for the app on the phone.
