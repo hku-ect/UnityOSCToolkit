@@ -123,3 +123,22 @@ Then let’s start in Unity:
 7. Make sure the Android phone is connected to your computer with the USB cable and enable USB Debugging (http://www.greenbot.com/article/2457986/how-to-enable-developer-options-on-your-android-phone-or-tablet.html)
 8. Click “Build and Run” and the scene will built on your phone.
 9. When the app starts for the first time you might need to allow acces for the app on the phone.
+
+# Troubleshooting
+
+## Help! I'm receiving objects with the wrong name
+This means a Rigidbody/Skeleton was removed from the Motive project, causing an id-reshuffle that creates this particular problem. There is an easy, but cumbersome fix: Create a new Motive project, and re-add all of the Rigidbodies / Skeletons (sorry!)
+
+So, remember: don't remove Skeletons/Rigidbodies from a Motive project.
+
+## I want to links my PC / GearVR to a headset in Unity
+
+Make sure of the following:
+1. Your IP is on the 10.200.200.xxx range
+2. You have added this IP to the Handshaker ofxApp (we run this on the big Mac)
+    2b. Make sure you have added it with the correct name of the headset (same as the Rigidbody in Motive)
+3. You are running from the "handshake_scene" (in our Examples folder)
+4. You have dragged the correct scene onto the Handshaker script (on the Main Camera of the handshake_scene)
+5. If on the GearVR: You've tried turning the WiFi off/on.
+
+You can confirm if you are "handshaking" successfully (and with what headset) on the Handshaker ofxApp. It will register handshake attempts, and confirm if they are either successful or unsuccessful.
