@@ -142,3 +142,26 @@ Make sure of the following:
 5. If on the GearVR: You've tried turning the WiFi off/on.
 
 You can confirm if you are "handshaking" successfully (and with what headset) on the Handshaker ofxApp. It will register handshake attempts, and confirm if they are either successful or unsuccessful.
+
+## Handshaking is not working and/or I'm not receiving any OSC data
+Make absolutely sure of the following:
+
+1. Your IP is on the 10.200.200.xxx range
+2. This IP is added to the Handshaker and NatNet2OSCBridge ofxApps
+
+If you are on Windows you should <b>try turning off your firewall</b>, since it may be blocking incoming OSC messages.
+
+## Handshaking takes a long time
+This probably means there are a lot of devices on the WiFi network, and the UDP packets sent by the handshaker are being lost along the way. 
+
+Try reducing the number of devices on the network (if possible), by turning WiFi modules of devices like phones off (if you're not using them of course).
+
+Try restarting the Handshaker ofxApp.
+
+## Objects/GearVR are moving way too much / too little in my Unity scene
+You've probably mismatched the scale of your scene. The default is <b>1 meter = 1 unit</b>, but you can change this by setting the <b>World Scale</b> of the OSCClient script to a number larger/smaller than 1. Bigger will make you move more than you are in real life, smaller will make you move less.
+
+As a general rule, try to avoid doing this. It's always better to make sure you use the correct 1 meter = 1 unit scale, than scaling the input (unless you really have to for some sort of effect).
+
+## An motion-captured object is quickly rotating / teleporting
+This probably means there are two similar objects, and Motive cannot clearly distinguish between them. Change the marker-setup of the object that is glitching and re-add it, <b>but do NOT remove the old one, simply "turn it off" with the checkbox.</b>
