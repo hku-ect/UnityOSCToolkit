@@ -131,7 +131,7 @@ This means a Rigidbody/Skeleton was removed from the Motive project, causing an 
 
 So, remember: don't remove Skeletons/Rigidbodies from a Motive project.
 
-## I want to links my PC / GearVR to a headset in Unity
+## I want to link my PC / GearVR to a headset in Unity
 
 Make sure of the following:
 1. Your IP is on the 10.200.200.xxx range
