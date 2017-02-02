@@ -261,7 +261,7 @@ namespace HKUECT {
 			RigidbodyDefinition def;
 			if (rigidbodies.ContainsKey(name)) {
 				def = rigidbodies [name];
-				def.position = position;
+				def.position = position + mPosition;
 				def.rotation = orientation;
 				def.velocity = velocity;
 				def.angularVelocity = angVel;

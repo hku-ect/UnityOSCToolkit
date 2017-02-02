@@ -67,7 +67,7 @@ namespace HKUECT {
 			handShakedName = GearData.playerObjectName;
 			handshakeIP = GearData.handShakeIP;
 
-			name = handShakedName;
+			name = rigidbodyName = handShakedName;
 
 			deactiveWhenMissing = true;
 			deactivateWhenUntracked = (name != handShakedName);
@@ -85,7 +85,7 @@ namespace HKUECT {
 
 		protected override void ApplyTransformUpdate(Vector3 position, Quaternion rotation) {
 			//our gear
-			if (name == handShakedName) {
+			if (rigidbodyName == handShakedName) {
 				if (verticalWalking) {
 
 					if (rBody == null) {
@@ -126,7 +126,7 @@ namespace HKUECT {
 
 					//send OSC Message for position
 					OSCMessage m = new OSCMessage("/gear-virtualpos");
-					m.Append(name);
+					m.Append(rigidbodyName);
 					m.Append(objectPosition.x);
 					m.Append(objectPosition.y);
 					m.Append(objectPosition.z);
@@ -183,7 +183,7 @@ namespace HKUECT {
 			int index = 0;
 			string incomingName = (string)data [index++];
 
-			if (name == incomingName) {
+			if (rigidbodyName == incomingName) {
 				float x = (float)data [index++];
 				float y = (float)data [index++];
 				float z = (float)data [index++];
