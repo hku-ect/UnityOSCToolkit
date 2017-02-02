@@ -137,10 +137,10 @@ Make sure of the following:
 
 1. Your IP is on the 10.200.200.xxx range
 2. You have added this IP to the Handshaker ofxApp (we run this on the big Mac)
-    2b. Make sure you have added it with the correct name of the headset (same as the Rigidbody in Motive)
-3. You are running from the "handshake_scene" (in our Examples folder)
-4. You have dragged the correct scene onto the Handshaker script (on the Main Camera of the handshake_scene)
-5. If on the GearVR: You've tried turning the WiFi off/on.
+3. Make sure you have added it with the correct name of the headset (same as the Rigidbody in Motive)
+4. You are running from the "handshake_scene" (in our Examples folder)
+5. You have dragged the correct scene onto the Handshaker script (on the Main Camera of the handshake_scene)
+6. If on the GearVR: You've tried turning the WiFi off/on.
 
 You can confirm if you are "handshaking" successfully (and with what headset) on the Handshaker ofxApp. It will register handshake attempts, and confirm if they are either successful or unsuccessful.
 
