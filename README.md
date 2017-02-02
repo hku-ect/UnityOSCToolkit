@@ -163,5 +163,5 @@ You've probably mismatched the scale of your scene. The default is <b>1 meter = 
 
 As a general rule, try to avoid doing this. It's always better to make sure you use the correct 1 meter = 1 unit scale, than scaling the input (unless you really have to for some sort of effect).
 
-## An motion-captured object is quickly rotating / teleporting
+## A motion-captured object is quickly rotating / teleporting
 This probably means there are two similar objects, and Motive cannot clearly distinguish between them. Change the marker-setup of the object that is glitching and re-add it, <b>but do NOT remove the old one, simply "turn it off" with the checkbox.</b>
