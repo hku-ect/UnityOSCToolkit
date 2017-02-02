@@ -134,6 +134,7 @@ So, remember: don't remove Skeletons/Rigidbodies from a Motive project.
 ## I want to link my PC / GearVR to a headset in Unity
 
 Make sure of the following:
+
 1. Your IP is on the 10.200.200.xxx range
 2. You have added this IP to the Handshaker ofxApp (we run this on the big Mac)
     2b. Make sure you have added it with the correct name of the headset (same as the Rigidbody in Motive)
