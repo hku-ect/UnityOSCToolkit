@@ -107,6 +107,7 @@ First let’s download and instal the prerequisites:
 3. Download and install the Java Development Kit (http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
 4. Download an install Oculus mobile sdk (https://developer3.oculus.com/downloads/)
 5. Get the OSIG signature of your android phone (https://dashboard.oculus.com/tools/osig-generator/)
+6. Copy th OSIG file to: Project/Assets/Plugins/Android/assets/
  * Please note that you need a Oculus account to acces the page, which is free
  * you need to run de ADB tool from a terminal/command prompt. You can find the command in de android SDK directory and then “platform-tools"
 
@@ -124,7 +125,20 @@ Then let’s start in Unity:
 8. Click “Build and Run” and the scene will built on your phone.
 9. When the app starts for the first time you might need to allow acces for the app on the phone.
 
-# Troubleshooting
+## Troubleshooting How to run a Unity application on the GearVR
+
+If you get the folowing error: 
+*"Unable to list target platforms. Please make sure the android sdk path is correct. See the Console for more details."*
+
+Follow these instructions:
+
+* http://answers.unity3d.com/questions/1323731/unable-to-list-target-platforms-please-make-sure-t.html
+* Url sdk tools Windows: http://dl-ssl.google.com/android/repository/tools_r25.2.5-windows.zip
+* Url sdk tools OSX: https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
+
+
+
+# Troubleshooting UnityOSCToolkit
 
 ## Help! I'm receiving objects with the wrong name
 This means a Rigidbody/Skeleton was removed from the Motive project, causing an id-reshuffle that creates this particular problem. There is an easy, but cumbersome fix: Create a new Motive project, and re-add all of the Rigidbodies / Skeletons (sorry!)
