@@ -100,26 +100,26 @@ If you want to track rigidbodies in a specific way (only rotations or positions,
 
 First let’s download and instal the prerequisites:
 
-1. Make sure you have [Unity installed with android built support](https://unity3d.com/get-unity/download)
+1. Make sure you have [Unity installed with android built support](https://unity3d.com/get-unity/download).
    *As of writing version 2017.1.1f1*
-2. Download and install [Android studio](https://developer.android.com/studio/index.html), so Unity can use the Android SDK
-   * Also note/save the location where the SDK is installed you need to tell this to Unity
-3. Download and install the [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
+2. Download and install [Android studio](https://developer.android.com/studio/index.html), so Unity can use the Android SDK.
+   *Also note the location where the SDK is installed you need to tell this to Unity*
+3. Download and install the [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html).
    *As of writing version 9*
-4. Download an install [Oculus mobile sdk](https://developer3.oculus.com/downloads/)
+4. Download and install [Oculus mobile sdk](https://developer3.oculus.com/downloads/).
    *As of writing version 1.18, this is a UnityPackage which you'll need to import to your Unity project (Assets - Import Package - Custom Package)*
 5. Get the OSIG signature of your android phone (https://dashboard.oculus.com/tools/osig-generator/)
 6. Copy th OSIG file to: Project/Assets/Plugins/Android/assets/
- * Please note that you need a Oculus account to acces the page, which is free
- * you need to run de ADB tool from a terminal/command prompt. You can find the command in de android SDK directory and then “platform-tools"
+   * Please note that you need a Oculus account to acces the page, which is free
+   * you need to run de ADB tool from a terminal/command prompt. You can find the command in de android SDK directory and then “platform-tools"
 
 Then let’s start in Unity:
 
 1. Start new 3D Unity project
 2. Go to “Edit” -> “Project Settings” -> “Player Settings"
 3. In the Settings for Android:
-  * select box: "Virtual Reality Supported” (you should see Virtual Reality SDK’s -> Oculus if not make sure you installed the Oculus mobile SDK)
-  * Set your bundle identifier, for example com.mycompanyname.projectname
+   * select box: "Virtual Reality Supported” (you should see Virtual Reality SDK’s -> Oculus if not make sure you installed the Oculus mobile SDK)
+   * Set your bundle identifier, for example com.mycompanyname.projectname
 4. Create your Unity Scene
 5. Go to “File” -> “build settings” and switch platform to “Android"
 6. Set texture compression to “ETC2 (GL 3.0)"
