@@ -100,24 +100,28 @@ If you want to track rigidbodies in a specific way (only rotations or positions,
 
 First let’s download and instal the prerequisites:
 
-1. Make sure you have Unity 5.x installed with android built support 
- * (https://unity3d.com/get-unity/download)
-2. Download and install Android studio, so Unity can use the Android SDK (https://developer.android.com/studio/index.html)
- * Also note/save the location where the SDK is installed you need to tell this to Unity
-3. Download and install the Java Development Kit (http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
-4. Download an install Oculus mobile sdk (https://developer3.oculus.com/downloads/)
+1. Make sure you have [Unity installed with android built support](https://unity3d.com/get-unity/download).
+   *As of writing version 2017.1.1f1* (See #1)
+2. Download and install Android SDK command line tools [from the bottom of this page](https://developer.android.com/studio/index.html) 
+
+2. Download and install [Android studio](https://developer.android.com/studio/index.html), so Unity can use the Android SDK.
+   *Also note the location where the SDK is installed you need to tell this to Unity*
+3. Download and install the [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html).
+   *As of writing version 1.8 works, 9 doesn't work!*
+4. Download and install [Oculus mobile sdk](https://developer3.oculus.com/downloads/).
+   *As of writing version 1.18, this is a UnityPackage which you'll need to import to your Unity project (Assets - Import Package - Custom Package)*
 5. Get the OSIG signature of your android phone (https://dashboard.oculus.com/tools/osig-generator/)
 6. Copy th OSIG file to: Project/Assets/Plugins/Android/assets/
- * Please note that you need a Oculus account to acces the page, which is free
- * you need to run de ADB tool from a terminal/command prompt. You can find the command in de android SDK directory and then “platform-tools"
+   * Please note that you need a Oculus account to acces the page, which is free
+   * you need to run de ADB tool from a terminal/command prompt. You can find the command in de android SDK directory and then “platform-tools"
 
 Then let’s start in Unity:
 
 1. Start new 3D Unity project
 2. Go to “Edit” -> “Project Settings” -> “Player Settings"
 3. In the Settings for Android:
- * select box: "Virtual Reality Supported” (you should see Virtual Reality SDK’s -> Oculus if not make sure you installed the Oculus mobile SDK)
-  * Set your bundle identifier, for example com.mycompanyname.projectname
+   * select box: "Virtual Reality Supported” (you should see Virtual Reality SDK’s -> Oculus if not make sure you installed the Oculus mobile SDK)
+   * Set your bundle identifier, for example com.mycompanyname.projectname
 4. Create your Unity Scene
 5. Go to “File” -> “build settings” and switch platform to “Android"
 6. Set texture compression to “ETC2 (GL 3.0)"
@@ -129,6 +133,7 @@ Then let’s start in Unity:
 
 If you get the folowing error: 
 *"Unable to list target platforms. Please make sure the android sdk path is correct. See the Console for more details."*
+* If you already have the OVR package in a Unity project you can find its version number in the OVR/Scripts/OVRPlugin.cs file
 
 Follow these instructions:
 
@@ -136,11 +141,10 @@ Follow these instructions:
 * Url sdk tools Windows: http://dl-ssl.google.com/android/repository/tools_r25.2.5-windows.zip
 * Url sdk tools OSX: https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
 
-
-
 # Troubleshooting UnityOSCToolkit
 
 ## Help! I'm receiving objects with the wrong name
+
 This means a Rigidbody/Skeleton was removed from the Motive project, causing an id-reshuffle that creates this particular problem. There is an easy, but cumbersome fix: Create a new Motive project, and re-add all of the Rigidbodies / Skeletons (sorry!)
 
 So, remember: don't remove Skeletons/Rigidbodies from a Motive project.
