@@ -20,7 +20,17 @@
 
 using System;
 using System.Net;
+using UnityEngine;
+
+#if NETFX_CORE
+using Windows.Networking;
+using Windows.Networking.Sockets;
+using Windows.Storage.Streams;
+#else
 using System.Net.Sockets;
+#endif
+
+
 
 namespace UnityOSC
 {
@@ -42,7 +52,12 @@ namespace UnityOSC
 		#region Member Variables
 		private IPAddress _ipAddress;
 		private int _port;
+#if NETFX_CORE
+		DatagramSocket socket;		
+		HostName _hostname;
+#else
 		private UdpClient _udpClient;
+#endif
 		#endregion
 		
 		#region Properties
@@ -69,6 +84,13 @@ namespace UnityOSC
 		/// </summary>
 		public void Connect()
 		{
+#if NETFX_CORE
+			Debug.Log("OSCClient Connect start...");
+			_hostname = new HostName(_ipAddress.ToString());
+			socket = new DatagramSocket();
+
+			Debug.Log("exit start:"+_ipAddress.ToString());
+#else
 			if(_udpClient != null) Close();
 			_udpClient = new UdpClient();
 			try
@@ -79,34 +101,63 @@ namespace UnityOSC
 			{
 				throw new Exception(String.Format("Can't create client at IP address {0} and port {1}.", _ipAddress,_port));
 			}
+#endif		
 		}
 
-		public void Flush()
-		{
-			if(_udpClient != null)
-			{
+		public void Flush() {
+#if NETFX_CORE
+			//socket.Flush();
+#else
+			if (_udpClient != null) {
 				//_udpClient.Client.SetSocketOption(SocketOptionLevel.Udp, SocketOptionName.DontLinger, true );
 			}
+#endif
 		}
-		
+
 		/// <summary>
 		/// Closes the client.
 		/// </summary>
 		public void Close()
 		{
-			if ( _udpClient != null ) {
-				_udpClient.Close();
-				_udpClient = null;
-			}
+#if NETFX_CORE
+			socket.Dispose();
+			Debug.Log("OSC CLIENT UWP CLOSE");
+#else
+			_udpClient.Close();
+			_udpClient = null;
+#endif
 		}
-		
-		/// <summary>
-		/// Sends an OSC packet to the defined destination and address of the client.
-		/// </summary>
-		/// <param name="packet">
-		/// A <see cref="OSCPacket"/>
-		/// </param>
-		public void Send(OSCPacket packet)
+
+        /// <summary>
+        /// Sends an OSC packet to the defined destination and address of the client.
+        /// </summary>
+        /// <param name="packet">
+        /// A <see cref="OSCPacket"/>
+        /// </param>
+#if NETFX_CORE
+		public async void Send(OSCPacket packet)
+		{
+			byte[] data = packet.BinaryData;
+			//Debug.Log("OSCCLIENT-SEND:" + System.Text.Encoding.ASCII.GetString(data));
+
+			using (var writer = new DataWriter(await socket.GetOutputStreamAsync(_hostname, _port.ToString()))){
+				try 
+				{
+					writer.WriteBytes(data);
+					await writer.StoreAsync();
+
+				}
+				catch
+				{
+					throw new Exception(String.Format("Can't send OSC packet to client {0} : {1}:Length{2}", _ipAddress, _port,data.Length));
+				}
+
+
+			}
+
+		}
+#else
+        public void Send(OSCPacket packet)
 		{
 			byte[] data = packet.BinaryData;
 			try 
@@ -118,7 +169,8 @@ namespace UnityOSC
 				throw new Exception(String.Format("Can't send OSC packet to client {0} : {1}", _ipAddress, _port));
 			}
 		}
-		#endregion
+#endif
+#endregion
 	}
 }
 

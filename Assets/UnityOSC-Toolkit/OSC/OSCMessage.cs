@@ -43,15 +43,13 @@ namespace UnityOSC
 		#endregion
 		
 		#region Member Variables
-		private const char INTEGER 	= 'i';
-		private const char FLOAT   	= 'f';
-		private const char LONG	   	= 'h';
-		private const char DOUBLE  	= 'd';
-		private const char STRING  	= 's';
-		private const char BYTE    	= 'b';
-		private const char DEFAULT 	= ',';
-		private const char TRUE 	= 'T';
-		private const char FALSE 	= 'F';
+		private const char INTEGER = 'i';
+		private const char FLOAT   = 'f';
+		private const char LONG	   = 'h';
+		private const char DOUBLE  = 'd';
+		private const char STRING  = 's';
+		private const char BYTE    = 'b';
+		private const char DEFAULT = ',';
 		
 		private string _typeTag;
 		
@@ -107,7 +105,7 @@ namespace UnityOSC
 		/// <returns>
 		/// A <see cref="OSCMessage"/>
 		/// </returns>
-		public static OSCMessage Unpack(byte[] data, ref int start)
+		public new static OSCMessage Unpack(byte[] data, ref int start)
 		{
 			string address = OSCPacket.UnpackValue<string>(data, ref start);
 			OSCMessage message = new OSCMessage(address);
@@ -119,7 +117,6 @@ namespace UnityOSC
 				switch (tag)
 				{
 					case DEFAULT:
-						//UnityEngine.Debug.LogWarning("DEFAULT TAG");
 						continue;
 
 					case INTEGER:
@@ -145,17 +142,11 @@ namespace UnityOSC
 					case BYTE:
 						value = OSCPacket.UnpackValue<byte[]>(data, ref start);
 						break;
-					/*
-					case TRUE:
-						value = true;
-						break;
-					case FALSE:
-						value = false;
-						break;
-					*/
+
 					default:
-						//UnityEngine.Debug.LogWarning("Unknown tag: " + tag);
+					#if !NETFX_CORE
 						Console.WriteLine("Unknown tag: " + tag);
+					#endif
 						continue;
 				}
 
@@ -176,43 +167,48 @@ namespace UnityOSC
 		/// <param name="value">
 		/// A <see cref="T"/>
 		/// </param>
-		public override void Append<T> (T value)
+		//@see https://github.com/jorgegarcia/UnityOSC/issues/8
+		//changed by littlewing
+		//addaptive for iOS
+
+		public override void Append<T>(T value)
 		{
-			Type type = value.GetType();
 			char typeTag = DEFAULT;
-
-			switch (type.Name)
+			
+			if (value is int)
 			{
-				case "Int32":
-					typeTag = INTEGER;
-					break;
-
-				case "Int64":
-					typeTag = LONG;
-					break;
-
-				case "Single":
-					typeTag = FLOAT;
-					break;
-
-				case "Double":
-					typeTag = DOUBLE;
-					break;
-
-				case "String":
-					typeTag = STRING;
-					break;
-
-				case "Byte[]":
-					typeTag = BYTE;
-					break;
-
-				default:
-					throw new Exception("Unsupported data type.");
+				typeTag = INTEGER;
 			}
-
+			else if (value is long)
+			{
+				typeTag = LONG;
+			}
+			else if (value is float)
+			{
+				typeTag = FLOAT;
+			}
+			else if (value is double)
+			{
+				typeTag = DOUBLE;
+			}
+			else if (value is string)
+			{
+				typeTag = STRING;
+			}
+			else if (value is byte[])
+			{ 
+				typeTag = BYTE;
+			}
+			else
+			{ 
+				throw new Exception("Unsupported data type.");
+			}
+			
 			_typeTag += typeTag;
 			_data.Add(value);
+
+
+
 		}
 		#endregion
 	}
