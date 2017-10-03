@@ -204,7 +204,6 @@ namespace UnityOSC
                 byte[] buffer = new byte[length];
                 if (data.Length < start + buffer.Length)
                 {
-                    WorldErrors.Print("TRYING TO READ OUT OF BOUNDS1:" + data.Length + "," + start + "," + buffer.Length);
                     buffer = new byte[(data.Length - start)];
                 }
                 Array.Copy(data, start, buffer, 0, buffer.Length);
@@ -232,7 +231,6 @@ namespace UnityOSC
 				}
                 if (data.Length < start + buffername.Length)
                 {
-                    WorldErrors.Print("TRYING TO READ OUT OF BOUNDS2:" + data.Length + "," + start + "," + buffername.Length);
                     Array.Copy(data, start, buffername, 0, data.Length - start);
                     for( int i = ( data.Length - start ); i < buffername.Length; ++i )
                     {
