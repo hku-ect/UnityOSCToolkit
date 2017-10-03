@@ -99,7 +99,7 @@ public class OSCHandler : MonoBehaviour
 		
 		//Initialize OSC servers (listeners)
 		// Receiver
-		if(inComingPort != null  && inComingPort != 0)
+		if(inComingPort != 0)
 			CreateServer(id, inComingPort);
 	}
 
