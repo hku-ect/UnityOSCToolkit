@@ -37,7 +37,6 @@ namespace UnityOSC
 		public OSCBundle()
 		{
 			_address = BUNDLE;
-			_timeStamp = Now;
 		}
 		
 		public OSCBundle(long timestamp)
@@ -45,13 +44,6 @@ namespace UnityOSC
 			_address = BUNDLE;
 			_timeStamp = timestamp;
 		}
-
-		public OSCBundle(DateTime time)
-		{
-			_address = BUNDLE;
-			_timeStamp = DateTimeToNtpTimeStamp (time);
-		}
-		
 		#endregion
 		
 		#region Member Variables
@@ -60,13 +52,6 @@ namespace UnityOSC
 		#endregion
 		
 		#region Properties
-		public static long Now
-		{
-			get
-			{
-				return DateTimeToNtpTimeStamp(DateTime.Now);
-			}
-		}
 		#endregion
 	
 		#region Methods
@@ -81,22 +66,9 @@ namespace UnityOSC
 		/// </summary>
 		override public void Pack()
 		{
-			List<byte> data = new List<byte>();
-
-			data.AddRange (OSCPacket.PackValue(BUNDLE));
-			PadNull (data);
-
-			data.AddRange (OSCPacket.PackValue<Int64>(_timeStamp));
-
-			foreach (object value in _data)
-			{
-				Trace.Assert(value is OSCMessage);
-				OSCMessage msg = (OSCMessage) value;
-
-				data.AddRange (OSCPacket.PackValue(msg.BinaryData));
-			}
+			// TODO: Pack bundle with timestamp in NTP format
 			
-			this._binaryData = data.ToArray ();
+			throw new NotImplementedException("OSCBundle.Pack() : Not implemented method.");
 		}
 
 		/// <summary>
@@ -117,7 +89,10 @@ namespace UnityOSC
 		public new static OSCBundle Unpack(byte[] data, ref int start, int end)
 		{
 			string address = OSCPacket.UnpackValue<string>(data, ref start);
+			
+			#if !NETFX_CORE
 			Trace.Assert(address == BUNDLE);
+			#endif
 			
 			long timeStamp = OSCPacket.UnpackValue<long>(data, ref start);
 			OSCBundle bundle = new OSCBundle(timeStamp);
@@ -140,19 +115,10 @@ namespace UnityOSC
 		/// </param>
 		public override void Append<T> (T msgvalue)
 		{
+			#if !NETFX_CORE
 			Trace.Assert(msgvalue is OSCMessage);
+			#endif
 			_data.Add(msgvalue);
-		}
-
-		public static long DateTimeToNtpTimeStamp(DateTime t)
-		{
-			DateTime dateTime1900 = new DateTime (1900, 1, 1, 0, 0, 0);
-			TimeSpan dt = t - dateTime1900;
-
-			long seconds  = (long) Math.Floor(dt.TotalSeconds);
-			long fraction = ((dt.Milliseconds % 1000) * 0x100000000L) / 1000;
-
-			return ( (seconds << 32) | fraction);
 		}
 		#endregion			
 	}

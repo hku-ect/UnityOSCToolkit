@@ -18,11 +18,21 @@
 // 	  IN THE SOFTWARE.
 //
 
+using UnityEngine;
 using System;
+using System.IO;
 using System.Net;
+using System.Collections.Generic;
+
+#if NETFX_CORE
+using Windows.Networking.Sockets;
+using Windows.Storage.Streams;
+#else
 using System.Net.Sockets;
 using System.Threading;
-using System.Collections.Generic;
+#endif
+
+
 
 namespace UnityOSC
 {
@@ -48,14 +58,64 @@ namespace UnityOSC
 		#endregion
 		
 		#region Member Variables
+
+#if NETFX_CORE
+		DatagramSocket socket;
+		private OSCPacket _lastReceivedPacket;
+#else
 		private UdpClient _udpClient;
-		private int _localPort;
 		private Thread _receiverThread;
 		private OSCPacket _lastReceivedPacket;
-		private int _sleepMilliseconds = 10;
+#endif
+        private int _localPort;
+        private int _sleepMilliseconds = 10;
 		#endregion
 		
 		#region Properties
+#if NETFX_CORE
+		private async void Socket_MessageReceived(Windows.Networking.Sockets.DatagramSocket sender,
+		Windows.Networking.Sockets.DatagramSocketMessageReceivedEventArgs args)
+		{
+			// lock multi event 
+			socket.MessageReceived -= Socket_MessageReceived;
+
+            //Debug.Log("OSCSERVER UWP  Socket_MessageReceived");
+
+            //Read the message that was received from the UDP echo client.
+            //Stream streamIn = args.GetDataStream().AsStreamForRead();
+            DataReader reader = args.GetDataReader();
+
+            //StreamReader reader = new StreamReader(streamIn);
+            try
+            {
+
+                uint stringLength = reader.UnconsumedBufferLength;
+                byte[] bytes = new byte[stringLength];
+                reader.ReadBytes(bytes);
+
+                //string message = await reader.ReadToEndAsync()
+                //                 .ConfigureAwait(continueOnCapturedContext: false);
+                //byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
+
+                OSCPacket packet = OSCPacket.Unpack(bytes);
+                _lastReceivedPacket = packet;
+
+                PacketReceivedEvent(this, _lastReceivedPacket); 
+            }
+            catch (System.Exception e)
+            {
+                WorldErrors.Print(e.Message);
+            }
+            finally
+            {
+                //streamIn.Dispose();
+                reader.Dispose();
+                // unlock multi event 
+                socket.MessageReceived += Socket_MessageReceived;
+            }
+		}
+
+#else
 		public UdpClient UDPClient
 		{
 			get
@@ -67,6 +127,7 @@ namespace UnityOSC
 				_udpClient = value;
 			}
 		}
+#endif
 		
 		public int LocalPort
 		{
@@ -103,17 +164,41 @@ namespace UnityOSC
 				_sleepMilliseconds = value;
 			}
 		}
-		#endregion
-	
-		#region Methods
-		
-		/// <summary>
-		/// Opens the server at the given port and starts the listener thread.
-		/// </summary>
-		public void Connect()
+        #endregion
+
+#region Methods
+
+/// <summary>
+/// Opens the server at the given port and starts the listener thread.
+/// </summary>
+/// 
+#if NETFX_CORE
+        public async void Connect()
+        {
+            Debug.Log("Waiting for a connection... " + _localPort.ToString());
+            socket = new DatagramSocket();
+			socket.Control.QualityOfService = SocketQualityOfService.LowLatency;
+            socket.Control.DontFragment = true;
+            socket.Control.InboundBufferSizeInBytes = 10000;
+            socket.MessageReceived += Socket_MessageReceived;
+
+            try
+            {
+                await socket.BindEndpointAsync(null, _localPort.ToString());
+
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.ToString());
+                Debug.Log(SocketError.GetStatus(e.HResult).ToString());
+                return;
+            }
+
+        }
+#else
+        public void Connect()
 		{
 			if(this._udpClient != null) Close();
-			
 			try
 			{
 				_udpClient = new UdpClient(_localPort);
@@ -125,19 +210,25 @@ namespace UnityOSC
 				throw e;
 			}
 		}
-		
-		/// <summary>
-		/// Closes the server and terminates its listener thread.
-		/// </summary>
-		public void Close()
+#endif
+
+
+        /// <summary>
+        /// Closes the server and terminates its listener thread.
+        /// </summary>
+        public void Close()
 		{
+#if NETFX_CORE
+			socket.Dispose();
+#else
 			if(_receiverThread !=null) _receiverThread.Abort();
 			_receiverThread = null;
 			_udpClient.Close();
 			_udpClient = null;
+#endif
 		}
-		
 
+#if !NETFX_CORE
 		/// <summary>
 		/// Receives and unpacks an OSC packet.
         /// A <see cref="OSCPacket"/>
@@ -176,7 +267,8 @@ namespace UnityOSC
 				Thread.Sleep(_sleepMilliseconds);
 			}
 		}
-		#endregion
-	}
+#endif
+ #endregion
+    }
 }
 

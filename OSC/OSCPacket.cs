@@ -46,7 +46,9 @@ namespace UnityOSC
 			}
 			set
 			{
+				#if !NETFX_CORE
 				Trace.Assert(string.IsNullOrEmpty(_address) == false);
+				#endif
 				_address = value;
 			}
 		}
@@ -122,48 +124,49 @@ namespace UnityOSC
 		/// <returns>
 		/// A <see cref="System.Byte[]"/>
 		/// </returns>
+		//@see https://github.com/jorgegarcia/UnityOSC/issues/8
+		//changed by littlewing
+		//addaptive for iOS
 		protected static byte[] PackValue<T>(T value)
 		{
 			object valueObject = value;
-			Type type = value.GetType();
 			byte[] data = null;
-
-			switch (type.Name)
+			
+			if (value is int)
 			{
-				case "Int32":
-					data = BitConverter.GetBytes((int)valueObject);
-					if (BitConverter.IsLittleEndian) data = SwapEndian(data);
-					break;
-
-				case "Int64":
-					data = BitConverter.GetBytes((long)valueObject);
-					if (BitConverter.IsLittleEndian) data = SwapEndian(data);
-					break;
-
-				case "Single":
-					data = BitConverter.GetBytes((float)valueObject);
-					if (BitConverter.IsLittleEndian) data = SwapEndian(data);
-					break;
-
-				case "Double":
-					data = BitConverter.GetBytes((double)valueObject);
-					if (BitConverter.IsLittleEndian) data = SwapEndian(data);
-					break;
-
-				case "String":
-					data = Encoding.ASCII.GetBytes((string)valueObject);
-					break;
-
-				case "Byte[]":
-					byte[] valueData = ((byte[])valueObject);
-					List<byte> bytes = new List<byte>();
-					bytes.AddRange(PackValue(valueData.Length));
-					bytes.AddRange(valueData);
-					data = bytes.ToArray();
-					break;
-
-				default:
-					throw new Exception("Unsupported data type.");
+				data = BitConverter.GetBytes((int)valueObject);
+				if (BitConverter.IsLittleEndian) data = SwapEndian(data);
+			}
+			else if (value is long)
+			{
+				data = BitConverter.GetBytes((long)valueObject);
+				if (BitConverter.IsLittleEndian) data = SwapEndian(data);
+			}
+			else if (value is float)
+			{
+				data = BitConverter.GetBytes((float)valueObject);
+				if (BitConverter.IsLittleEndian) data = SwapEndian(data);
+			}
+			else if (value is double)
+			{
+				data = BitConverter.GetBytes((double)valueObject);
+				if (BitConverter.IsLittleEndian) data = SwapEndian(data);
+			}
+			else if (value is string)
+			{
+				data = Encoding.ASCII.GetBytes((string)valueObject);
+			}
+			else if (value is byte[])
+			{
+				byte[] valueData = ((byte[])valueObject);
+				List<byte> bytes = new List<byte>();
+				bytes.AddRange(PackValue(valueData.Length));
+				bytes.AddRange(valueData);
+				data = bytes.ToArray();
+			}
+			else
+			{
+				throw new Exception("Unsupported data type.");
 			}
 			return data;
 		}
@@ -199,6 +202,11 @@ namespace UnityOSC
 			{
                 int length = UnpackValue<int>(data, ref start);
                 byte[] buffer = new byte[length];
+                if (data.Length < start + buffer.Length)
+                {
+                    WorldErrors.Print("TRYING TO READ OUT OF BOUNDS1:" + data.Length + "," + start + "," + buffer.Length);
+                    buffer = new byte[(data.Length - start)];
+                }
                 Array.Copy(data, start, buffer, 0, buffer.Length);
                 start += buffer.Length;
                 start = ((start + 3) / 4) * 4;
@@ -222,8 +230,19 @@ namespace UnityOSC
 					default:
 						throw new Exception("Unsupported data type.");
 				}
-
-				Array.Copy(data, start, buffername, 0, buffername.Length);
+                if (data.Length < start + buffername.Length)
+                {
+                    WorldErrors.Print("TRYING TO READ OUT OF BOUNDS2:" + data.Length + "," + start + "," + buffername.Length);
+                    Array.Copy(data, start, buffername, 0, data.Length - start);
+                    for( int i = ( data.Length - start ); i < buffername.Length; ++i )
+                    {
+                        buffername[i] = 0;
+                    }
+                }
+                else
+                {
+                    Array.Copy(data, start, buffername, 0, buffername.Length);
+                }
 				start += buffername.Length;
 
 				if (BitConverter.IsLittleEndian)
