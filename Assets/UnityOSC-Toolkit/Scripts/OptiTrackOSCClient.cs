@@ -93,7 +93,7 @@ namespace HKUECT {
 				return false;
 
 			if (instance.skeletons.ContainsKey(name)) {
-				def = instance.skeletons [name];
+				def = instance.skeletons[name];
 				return true;
 			}
 
@@ -106,11 +106,29 @@ namespace HKUECT {
 				return false;
 
 			if (instance.rigidbodies.ContainsKey(name)) {
-				def = instance.rigidbodies [name];
+				def = instance.rigidbodies[name];
 				return true;
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Adds all current definitions to list. If there is no OSCClient, defList will be null.
+		/// </summary>
+		/// <param name="defList"></param>
+		/// <returns></returns>
+		public static bool GetAllRigidbodies(out List<RigidbodyDefinition> defList) {
+			defList = null;
+			if (instance == null)
+				return false;
+
+			defList = new List<RigidbodyDefinition>();
+			foreach (RigidbodyDefinition def in instance.rigidbodies.Values) {
+				defList.Add(def);
+			}
+
+			return true;
 		}
 
 		public static Vector3 GetPosition() {
@@ -130,6 +148,7 @@ namespace HKUECT {
 
 		Transform mTransform;
 		Vector3 mPosition;
+		Quaternion mRotation;
 
 		#endregion
 
@@ -161,7 +180,7 @@ namespace HKUECT {
 			//playerObject.name = playerObjectName;
 
 			server.SleepMilliseconds = 1;
-			server.Connect();
+			//server.Connect();
 			server.PacketReceivedEvent += PacketReceived;
 		}
 
@@ -172,23 +191,27 @@ namespace HKUECT {
 		void Update() {
 			//update root position
 			mPosition = mTransform.position;
+			mRotation = mTransform.rotation;
 		}
-		
+
 		// Update is called once per frame
 		void PacketReceived(OSCServer sender, OSCPacket Packet) {
 			if (Packet.IsBundle()) {
 				for (int i = 0; i < Packet.Data.Count; ++i) {
 					try {
-						HandleMessage((OSCMessage)Packet.Data [i]);
-					} catch (System.Exception e) {
+						HandleMessage((OSCMessage)Packet.Data[i]);
+					}
+					catch (System.Exception e) {
 						Debug.LogError(e.Message);
 						Debug.LogError(e.StackTrace);
 					}
 				}
-			} else {
+			}
+			else {
 				try {
 					HandleMessage((OSCMessage)Packet);
-				} catch (System.Exception e) {
+				}
+				catch (System.Exception e) {
 					Debug.LogError(e.Message);
 					Debug.LogError(e.StackTrace);
 				}
@@ -197,6 +220,7 @@ namespace HKUECT {
 
 		void HandleMessage(OSCMessage Packet) {
 			//Debug.Log(Packet.Address);
+			//WorldErrors.Print("Got Packet");
 			switch (Packet.Address) {
 				case "/rigidBody":
 					HandleRigidbody(Packet.Data);
@@ -226,33 +250,34 @@ namespace HKUECT {
 			//w
 			int index = 0;
 
-			int id = (int)data [index++];
-			string name = (string)data [index++];
+			int id = (int)data[index++];
+			string name = (string)data[index++];
 
 			//Debug.Log( "rb: "+name );
+			//WorldErrors.Print("rb: " + name);
 
 			Vector3 position;
-			position.x = (float)data [index++];
-			position.y = (float)data [index++];
-			position.z = (float)data [index++];
+			position.x = (float)data[index++];
+			position.y = (float)data[index++];
+			position.z = (float)data[index++];
 
 			Quaternion orientation;
-			orientation.x = (float)data [index++];
-			orientation.y = (float)data [index++];
-			orientation.z = (float)data [index++];
-			orientation.w = (float)data [index++];
+			orientation.x = (float)data[index++];
+			orientation.y = (float)data[index++];
+			orientation.z = (float)data[index++];
+			orientation.w = (float)data[index++];
 
 			Vector3 velocity;
-			velocity.x = (float)data [index++];
-			velocity.y = (float)data [index++];
-			velocity.z = (float)data [index++];
+			velocity.x = (float)data[index++];
+			velocity.y = (float)data[index++];
+			velocity.z = (float)data[index++];
 
 			Vector3 angVel;
-			angVel.x = (float)data [index++];
-			angVel.y = (float)data [index++];
-			angVel.z = (float)data [index++];
+			angVel.x = (float)data[index++];
+			angVel.y = (float)data[index++];
+			angVel.z = (float)data[index++];
 
-			bool isActive = ((int)data [index++]) == 1;
+			bool isActive = ((int)data[index++]) == 1;
 
 			position = position * scale;
 
@@ -260,16 +285,17 @@ namespace HKUECT {
 
 			RigidbodyDefinition def;
 			if (rigidbodies.ContainsKey(name)) {
-				def = rigidbodies [name];
-				def.position = position + mPosition;
-				def.rotation = orientation;
+				def = rigidbodies[name];
+				def.position = mRotation * position + mPosition;
+				def.rotation = mRotation * orientation;
 				def.velocity = velocity;
 				def.angularVelocity = angVel;
 				def.isActive = isActive;
-			} else {
+			}
+			else {
 				def = new RigidbodyDefinition();
-				def.position = position + mPosition;
-				def.rotation = orientation;
+				def.position = mRotation * position + mPosition;
+				def.rotation = mRotation * orientation;
 				def.velocity = velocity;
 				def.angularVelocity = angVel;
 				def.id = id;
@@ -284,15 +310,16 @@ namespace HKUECT {
 
 			//id
 			//name
-			string name = (string)data [index++];
-			int id = (int)data [index++];
+			string name = (string)data[index++];
+			int id = (int)data[index++];
 
 			SkeletonDefinition def;
 			bool isNew = false;
 			//check if this skeleton is already registered
 			if (skeletons.ContainsKey(name)) {
-				def = skeletons [name];
-			} else {
+				def = skeletons[name];
+			}
+			else {
 				def = new SkeletonDefinition();
 				def.name = name;
 				def.id = id;
@@ -305,24 +332,24 @@ namespace HKUECT {
 			Vector3 vel = Vector3.zero;
 			while (index < data.Count) {
 				//PER JOINT
-				string jointName = (string)data [index++];
+				string jointName = (string)data[index++];
 				Vector3 pos;
-				pos.x = (float)data [index++];
-				pos.y = (float)data [index++];
-				pos.z = (float)data [index++];
-				
+				pos.x = (float)data[index++];
+				pos.y = (float)data[index++];
+				pos.z = (float)data[index++];
+
 				Quaternion rot;
-				rot.x = (float)data [index++];
-				rot.y = (float)data [index++];
-				rot.z = (float)data [index++];
-				rot.w = (float)data [index++];
+				rot.x = (float)data[index++];
+				rot.y = (float)data[index++];
+				rot.z = (float)data[index++];
+				rot.w = (float)data[index++];
 
 				//for retargeting
-				int parentId = (int)data [index++];
+				int parentId = (int)data[index++];
 				Vector3 offset;
-				offset.x = (float)data [index++];
-				offset.y = (float)data [index++];
-				offset.z = (float)data [index++];
+				offset.x = (float)data[index++];
+				offset.y = (float)data[index++];
+				offset.z = (float)data[index++];
 
 				pos = pos * scale;
 
@@ -330,11 +357,12 @@ namespace HKUECT {
 
 				if (isNew) {
 					//add everything
-					def.Add(jointName, pos + mPosition, rot, offset, parentId);
-				} else {
+					def.Add(jointName, mRotation * pos + mPosition, rot * mRotation, offset, parentId);
+				}
+				else {
 					//these are the only values that change
-					def.positions [jointIndex] = pos + mPosition;
-					def.rotations [jointIndex] = rot;
+					def.positions[jointIndex] = mRotation * pos + mPosition;
+					def.rotations[jointIndex] = rot * mRotation;
 				}
 
 				jointIndex++;
