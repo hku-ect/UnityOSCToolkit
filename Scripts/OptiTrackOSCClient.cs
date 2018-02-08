@@ -87,6 +87,12 @@ namespace HKUECT {
 		/// </summary>
 		public bool flipX = false;
 
+		/// <summary>
+		/// With playing back recorded MOCAP data the rigidbody "isActive" property is always false. 
+		/// This toggle corrects using the isActive property to decide is we show a rigid body
+		/// </summary>
+		public bool liveMocapData = false;
+
 		public static bool GetSkeleton(string name, out SkeletonDefinition def) {
 			def = null;
 			if (instance == null)
@@ -290,7 +296,12 @@ namespace HKUECT {
 				def.rotation = mRotation * orientation;
 				def.velocity = velocity;
 				def.angularVelocity = angVel;
-				def.isActive = isActive;
+				// With recorded MOCAP data the isActive property is always false
+				if (liveMocapData) {
+					def.isActive = isActive;
+				} else {
+					def.isActive = true;
+				}
 			}
 			else {
 				def = new RigidbodyDefinition();
@@ -300,7 +311,12 @@ namespace HKUECT {
 				def.angularVelocity = angVel;
 				def.id = id;
 				def.name = name;
-				def.isActive = isActive;
+				// With recorded MOCAP data the isActive property is always false
+				if (liveMocapData) {
+					def.isActive = isActive;
+				} else {
+					def.isActive = true;
+				}
 				rigidbodies.Add(name, def);
 			}
 		}
