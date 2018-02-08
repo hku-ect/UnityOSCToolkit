@@ -102,14 +102,16 @@ First let’s download and instal the prerequisites:
 
 1. Make sure you have [Unity installed with android built support](https://unity3d.com/get-unity/download).
    *As of writing version 2017.1.1f1* (See #1)
-2. Download and install Android SDK command line tools [from the bottom of this page](https://developer.android.com/studio/index.html) 
+2. Download and install Android SDK command line tools [from the bottom of this page](https://developer.android.com/studio/index.html)
+ - Start the Adnroid SDK manager (bij starting the android.exe) And install "Android SDK platform-tools" and "android SDK-build-tools and the the sdk platform of the relvant android version for example android version 6.
 
-2. Download and install [Android studio](https://developer.android.com/studio/index.html), so Unity can use the Android SDK.
-   *Also note the location where the SDK is installed you need to tell this to Unity*
+~~2. Download and install [Android studio](https://developer.android.com/studio/index.html), so Unity can use the Android SDK.
+   *Also note the location where the SDK is installed you need to tell this to Unity*~~
+   
 3. Download and install the [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html).
-   *As of writing version 1.8 works, 9 doesn't work!*
-4. Download and install [Oculus mobile sdk](https://developer3.oculus.com/downloads/).
-   *As of writing version 1.18, this is a UnityPackage which you'll need to import to your Unity project (Assets - Import Package - Custom Package)*
+   *As of writing version 8 works, 9 doesn't work!*
+~~4. Download and install [Oculus mobile sdk](https://developer3.oculus.com/downloads/).
+   *As of writing version 1.18, this is a UnityPackage which you'll need to import to your Unity project (Assets - Import Package - Custom Package)*~~
 5. Get the OSIG signature of your android phone (https://dashboard.oculus.com/tools/osig-generator/)
 6. Copy th OSIG file to: Project/Assets/Plugins/Android/assets/
    * Please note that you need a Oculus account to acces the page, which is free
