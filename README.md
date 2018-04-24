@@ -103,7 +103,7 @@ First let’s download and instal the prerequisites:
 1. Make sure you have [Unity installed with android built support](https://unity3d.com/get-unity/download).
    *As of writing version 2017.4.1f1* (See #1)
 
-Either:
+Then either:
 
 2. Download and install [Android studio](https://developer.android.com/studio/index.html), so Unity can use the Android SDK.
    *Also note the location where the SDK is installed you need to tell this to Unity*~~
@@ -134,16 +134,21 @@ Notes:
 Then let’s start in Unity:
 
 1. Start new 3D Unity project
-2. Go to “Edit” -> “Project Settings” -> “Player Settings"
-3. In the Settings for Android (note the icon!!!):
+2. Go to "Edit" -> "Preferences" -> "External Tools" and set the SDK and JDK paths: i.e.:
+```
+SDK: C:/sdk-tools-windows-3859397
+JDK: C:/Program Files/Java/jdk1.8.0_171
+```
+2. Go to “Edit” -> “Project Settings” -> “Player Settings" and select "Android Settings" (the small middle icon) 
+3. In "Other Settings" set a "Package Name" and the "Minimum API Level" to at least 19 (Android 'Kit Kat')
+4. In "XR Settings":
    * select box: "Virtual Reality Supported” (you should see Virtual Reality SDK’s -> Oculus. If not click the + icon!)
-   * ~~Set your bundle identifier, for example com.mycompanyname.projectname~~
-4. Create your Unity Scene
-5. Go to “File” -> “build settings” and switch platform to “Android"
-6. Set texture compression to “ETC2 (GL 3.0)"
-7. Make sure the Android phone is connected to your computer with the USB cable and enable USB Debugging (http://www.greenbot.com/article/2457986/how-to-enable-developer-options-on-your-android-phone-or-tablet.html)
-8. Click “Build and Run” and the scene will built on your phone.
-9. When the app starts for the first time you might need to allow acces for the app on the phone.
+5. Create your Unity Scene
+6. Go to "File" -> "build settings", select "Android" and select "switch platform"
+7. Set texture compression to “ETC2 (GL 3.0)"
+8. Make sure the Android phone is connected to your computer with the USB cable and enable USB Debugging (http://www.greenbot.com/article/2457986/how-to-enable-developer-options-on-your-android-phone-or-tablet.html)
+9. Click “Build and Run” and the scene will built on your phone.
+10. When the app starts for the first time you might need to allow acces for the app on the phone.
 
 ## Troubleshooting How to run a Unity application on the GearVR
 
