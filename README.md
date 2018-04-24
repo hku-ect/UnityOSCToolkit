@@ -103,12 +103,12 @@ First let’s download and instal the prerequisites:
 1. Make sure you have [Unity installed with android built support](https://unity3d.com/get-unity/download).
    *As of writing version 2017.4.1f1* (See #1)
 
-Then either:
+**Then either:**
 
 2. Download and install [Android studio](https://developer.android.com/studio/index.html), so Unity can use the Android SDK.
-   *Also note the location where the SDK is installed you need to tell this to Unity*~~
+   Also note the location where the SDK is installed, you might need to tell this to Unity!
 
-Or:
+**Or:**
 
 2. Download and install Android SDK command line tools [from the bottom of this page](https://developer.android.com/studio/index.html)
  - Start the Android SDK manager and install the "platform-tools", "build-tools" and sdk platform of the relevant android version for example android version 6: i.e.:
