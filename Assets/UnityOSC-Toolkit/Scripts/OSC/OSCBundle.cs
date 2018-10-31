@@ -30,9 +30,9 @@ namespace UnityOSC
 	/// Models a Bundle of the OSC protocol.
 	/// Derived from a OSC Packet over a OSC Stream.
 	/// </summary>
+	[System.Serializable]
 	public sealed class OSCBundle : OSCPacket
 	{
-		
 		#region Constructors
 		public OSCBundle()
 		{
@@ -67,8 +67,53 @@ namespace UnityOSC
 		override public void Pack()
 		{
 			// TODO: Pack bundle with timestamp in NTP format
-			
-			throw new NotImplementedException("OSCBundle.Pack() : Not implemented method.");
+			if ( _timeStamp == 0 ) {
+				Decimal millis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+				_timeStamp = BitConverter.ToInt64(ConvertToNtp(millis), 0);
+			}
+
+			List<byte> data = new List<byte>();
+
+			data.AddRange(OSCPacket.PackValue(_address));
+			OSCPacket.PadNull(data);
+
+			data.AddRange(OSCPacket.PackValue(_timeStamp));
+			OSCPacket.PadNull(data);
+
+			foreach (OSCMessage msg in _data)
+			{
+				data.AddRange(msg.BinaryData);
+			}
+
+			this._binaryData = data.ToArray();
+		}
+
+		public static byte[] ConvertToNtp(decimal milliseconds)
+		{
+			decimal intpart = 0, fractpart = 0;
+			var ntpData = new byte[8];
+
+			intpart = milliseconds / 1000;
+			fractpart = ((milliseconds % 1000) * 0x100000000L) / 1000m;
+
+			Console.WriteLine("milliseconds: " + milliseconds);
+			Console.WriteLine("intpart:      " + intpart);
+			Console.WriteLine("fractpart:    " + fractpart);
+
+			var temp = intpart;
+			for (var i = 3; i >= 0; i--)
+			{
+				ntpData[i] = (byte)(temp % 256);
+				temp = temp / 256;
+			}
+
+			temp = fractpart;
+			for (var i = 7; i >= 4; i--)
+			{
+				ntpData[i] = (byte)(temp % 256);
+				temp = temp / 256;
+			}
+			return ntpData;
 		}
 
 		/// <summary>

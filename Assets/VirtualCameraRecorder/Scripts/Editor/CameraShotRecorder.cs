@@ -55,20 +55,22 @@ namespace VCR {
 				if ( brain ) brain.enabled = true;
 
 				GameObject TimelineGO = GameObject.Find("Timeline");
-				PlayableDirector pd = TimelineGO.GetComponent<PlayableDirector>();
+				if ( TimelineGO ) {
+					PlayableDirector pd = TimelineGO.GetComponent<PlayableDirector>();
 
-				foreach( RuntimeVCam vcam in vcams ) {
-					GameObject vcamRoot = GameObject.FindWithTag("VirtualCamera");
-					//vcamRoot.transform.position = vcam.position;
-					//vcamRoot.transform.eulerAngles = vcam.rotation;
-					//CinemachineVirtualCamera cam = vcamRoot.AddComponent<CinemachineVirtualCamera>();
-					//Animator anim = vcamRoot.AddComponent<Animator>();
-					//AnimatedCameraProperties camProps = vcamRoot.AddComponent<AnimatedCameraProperties>();
-					//camProps.postfx = GameObject.FindObjectOfType<PostProcessingBehaviour>().profile;
-					pd.playableGraph.GetResolver().SetReferenceValue(vcam.cmShot.VirtualCamera.exposedName, vcamRoot.GetComponent<CinemachineVirtualCamera>());
+					foreach( RuntimeVCam vcam in vcams ) {
+						GameObject vcamRoot = GameObject.FindWithTag("VirtualCamera");
+						//vcamRoot.transform.position = vcam.position;
+						//vcamRoot.transform.eulerAngles = vcam.rotation;
+						//CinemachineVirtualCamera cam = vcamRoot.AddComponent<CinemachineVirtualCamera>();
+						//Animator anim = vcamRoot.AddComponent<Animator>();
+						//AnimatedCameraProperties camProps = vcamRoot.AddComponent<AnimatedCameraProperties>();
+						//camProps.postfx = GameObject.FindObjectOfType<PostProcessingBehaviour>().profile;
+						pd.playableGraph.GetResolver().SetReferenceValue(vcam.cmShot.VirtualCamera.exposedName, vcamRoot.GetComponent<CinemachineVirtualCamera>());
+					}
+
+					vcams.Clear();
 				}
-
-				vcams.Clear();
 			}
 			else if ( state == PlayModeStateChange.EnteredPlayMode ) {
 				CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
@@ -133,7 +135,7 @@ namespace VCR {
 			};
 			UnityEditor.AnimationUtility.SetGenerateMotionCurves(clip, true);
 
-			AssetDatabase.CreateAsset(clip, "Assets/Recordings/" + stamp + ".anim");
+			AssetDatabase.CreateAsset(clip, "Assets/VirtualCameraRecorder/Recordings/" + stamp + ".anim");
 			AssetDatabase.SaveAssets();	
 			
 			if ( !pd.playableGraph.IsValid() ) pd.RebuildGraph();
@@ -164,7 +166,8 @@ namespace VCR {
 			CinemachineTrack cinemachineTrack = (CinemachineTrack)ta.GetRootTrack(0);
 			//create a timelineClip for the animationClip on the AnimationTrack
 			TimelineClip cmTimelineClip = cinemachineTrack.CreateClip<CinemachineShot>();
-			timelineAnimClip.start = cmTimelineClip.start;
+			timelineAnimClip.start = pd.time;
+			cmTimelineClip.start = pd.time;
 
 			CinemachineShot shot = cmTimelineClip.asset as CinemachineShot;
 			pd.playableGraph.GetResolver().SetReferenceValue(shot.VirtualCamera.exposedName, vcam);

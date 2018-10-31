@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Xml;
 
 namespace HKUECT {
-
 	public delegate void OSCMessageEventHandler(OSCMessage m);
+	public delegate void OSCBundleEventHandler(OSCBundle b);
 
 	#region data classes
 	[System.Serializable]
@@ -73,6 +73,7 @@ namespace HKUECT {
 	/// </remarks>
 	public class OptiTrackOSCClient : MonoBehaviour {
 		public static event OSCMessageEventHandler unhandledMessageEvent;
+		public static /*event*/ OSCBundleEventHandler onBundleReceived;
 
 		private static OptiTrackOSCClient instance;
 
@@ -197,6 +198,10 @@ namespace HKUECT {
 		// Update is called once per frame
 		void PacketReceived(OSCServer sender, OSCPacket Packet) {
 			if (Packet.IsBundle()) {
+				if ( onBundleReceived != null ) {
+					onBundleReceived(Packet as OSCBundle);
+				}
+				
 				for (int i = 0; i < Packet.Data.Count; ++i) {
 					try {
 						HandleMessage((OSCMessage)Packet.Data[i]);
@@ -248,6 +253,11 @@ namespace HKUECT {
 			//y
 			//z
 			//w
+			//ANGVEL
+			//x
+			//y
+			//z
+			//isActive (bool as int)
 			int index = 0;
 
 			int id = (int)data[index++];

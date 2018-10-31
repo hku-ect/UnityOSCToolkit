@@ -22,12 +22,14 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace UnityOSC
 {
 	/// <summary>
 	/// Models a OSC Packet over an OSC stream.
 	/// </summary>
+	[System.Serializable]
 	abstract public class OSCPacket
 	{
 		#region Member Variables

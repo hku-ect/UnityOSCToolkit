@@ -164,9 +164,11 @@ namespace UnityOSC
 			{
 				_udpClient.Send(data, data.Length);
 			}
-			catch
+			catch ( System.Exception e )
 			{
-				throw new Exception(String.Format("Can't send OSC packet to client {0} : {1}", _ipAddress, _port));
+				Debug.Log(data);
+				throw new Exception(e.Message);
+				//throw new Exception(String.Format("Can't send OSC packet to client {0} : {1}", _ipAddress, _port));
 			}
 		}
 #endif
