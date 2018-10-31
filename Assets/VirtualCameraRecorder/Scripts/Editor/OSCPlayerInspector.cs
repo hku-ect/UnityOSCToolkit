@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HKUECT;
@@ -56,13 +56,17 @@ public class OSCPlayerInspector : Editor {
 			skeletons = new Dictionary<string, SkeletonDefinition>();
 			mecanimSetups = new Dictionary<string, MecanimSetupData>();
 
+			//create recorder and bind everything
+			GameObjectRecorder recorder = new GameObjectRecorder(parent);
+
 			//spawn rigidbodies in mapping
-			foreach( RigidbodyMap rmap in p.mapping.rigidbodies ) {
+			foreach ( RigidbodyMap rmap in p.mapping.rigidbodies ) {
 				GameObject rbody = Instantiate(rmap.prefab) as GameObject;
 				rbody.name = rmap.name;
 				rbody.transform.parent = parent.transform;
 
 				gameObjectMap.Add(rmap.name, rbody);
+				recorder.BindComponentsOfType<Transform>(rbody, true);
 			}
 
 			//spawn skeletons in mapping
@@ -72,24 +76,22 @@ public class OSCPlayerInspector : Editor {
 
 				// Create a hierarchy of GameObjects that will receive the skeletal pose data.
 				GameObject skel = Instantiate(smap.prefab) as GameObject;
+				gameObjectMap.Add(smap.name, skel);
 				skel.name = smap.name;
 				skel.transform.parent = parent.transform;
 
 				GameObject skeletonRoot = new GameObject(smap.name+"_root");
-				skeletonRoot.transform.parent = parent.transform;
+				//skeletonRoot.transform.parent = parent.transform;
 				skeletonRoot.transform.localPosition = Vector3.zero;
 				skeletonRoot.transform.localRotation = Quaternion.identity;
 
-				gameObjectMap.Add(smap.name, skel);
+				recorder.BindComponentsOfType<Transform>(skel, true);
 			}
 
-			//initial frame setup
+			//initial frame setup (this spawns and sorts out skeleton initial conditions as well)
 			ApplyFrame(p.take.frameBundles[0], parent.transform);
 			long currentTicks = p.take.frameTimes[0];
-			
-			//create recorder and bind everything
-			GameObjectRecorder recorder = new GameObjectRecorder(parent);
-			recorder.BindComponentsOfType<Transform>(parent, true);
+
 
 			//record first frame
 			recorder.TakeSnapshot(0);
@@ -231,8 +233,8 @@ public class OSCPlayerInspector : Editor {
 		int index = 0;
 
 		//get data
-		int id = Data[index++].intValue;
 		string name = Data[index++].stringValue;
+		int id = Data[index++].intValue;
 
 		SkeletonDefinition def;
 		bool isNew = false;
@@ -292,7 +294,7 @@ public class OSCPlayerInspector : Editor {
 		if (!mecanimSetup) {
 			setup = new MecanimSetupData();
 			SpawnSkeleton(ref setup, def);
-			MecanimSetup(ref setup, def);
+			MecanimSetup(ref setup, def, parent);
 			mecanimSetups.Add(name, setup);
 		}
 
@@ -310,6 +312,11 @@ public class OSCPlayerInspector : Editor {
 	}
 
 	private void SpawnSkeleton( ref MecanimSetupData setup, SkeletonDefinition def ) {
+		GameObject root = GameObject.Find(def.name + "_root");
+		setup.m_rootObject = root;
+		setup.DestinationAvatar = gameObjectMap[def.name].GetComponent<Animator>().avatar;
+		setup.jointTransforms = new List<Transform>();
+
 		//TODO: Test this
 		Transform t;
 
@@ -479,11 +486,7 @@ public class OSCPlayerInspector : Editor {
 	/// Constructs the source Avatar and pose handlers for Mecanim retargeting.
 	/// </summary>
 	/// <param name="rootObjectName"></param>
-	private void MecanimSetup(ref MecanimSetupData setup, SkeletonDefinition skeleton) {
-		GameObject root = GameObject.Find(skeleton.name + "_root");
-		setup.m_rootObject = root;
-		setup.DestinationAvatar = root.GetComponent<Animator>().avatar;
-
+	private void MecanimSetup(ref MecanimSetupData setup, SkeletonDefinition skeleton, Transform animationParent ) {
 		string[] humanTraitBoneNames = HumanTrait.BoneName;
 
 		// Set up the mapping between Mecanim human anatomy and OptiTrack skeleton representations.
@@ -553,5 +556,8 @@ public class OSCPlayerInspector : Editor {
 
 		setup.m_srcPoseHandler = new HumanPoseHandler(setup.m_srcAvatar, setup.m_rootObject.transform);
 		setup.m_destPoseHandler = new HumanPoseHandler(setup.DestinationAvatar, gameObjectMap[skeleton.name].transform);
+
+		//parent the root object to the animation take root
+		setup.m_rootObject.transform.parent = animationParent;
 	}
 }
