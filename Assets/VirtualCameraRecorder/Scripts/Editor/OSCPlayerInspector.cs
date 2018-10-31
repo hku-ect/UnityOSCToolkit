@@ -230,8 +230,8 @@ public class OSCPlayerInspector : Editor
 
     void ApplySkeleton(List<OSCDataInstance> Data, Transform parent)
     {
-        //id			0
-        //name			1
+        //name			0
+        //id			1
 
         //PER JOINT (until out of range)
         //jointname		2 + jointIndex * 12
