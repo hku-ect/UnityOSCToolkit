@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
@@ -10,8 +10,11 @@ namespace VCR {
 		public AnimationClip masterClip;
 
 		PlayableDirector pd;
+		bool running = false;
 
-		void Start() {
+		IEnumerator Start() {
+			yield return new WaitForSeconds(1f);
+
 			pd = GetComponent<PlayableDirector>();
 
 			if ( masterClip == null ) {
@@ -21,15 +24,19 @@ namespace VCR {
 			else {
 				pd.timeUpdateMode = DirectorUpdateMode.Manual;
 			}
+
+			running = true;
 		}
 		
 		// Update is called once per frame
 		void Update () {
-			pd.time += Time.deltaTime;
-			if ( pd.time > masterClip.length ) {
-				pd.time -= masterClip.length;
+			if (running) {
+				pd.time += Time.deltaTime;
+				if (pd.time > masterClip.length) {
+					pd.time -= masterClip.length;
+				}
+				pd.Evaluate();
 			}
-			pd.Evaluate();
 		}
 	}
 }
