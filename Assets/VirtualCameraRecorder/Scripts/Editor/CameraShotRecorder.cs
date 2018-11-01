@@ -123,7 +123,7 @@ namespace VCR {
 			//camProps.postfx = GameObject.FindObjectOfType<PostProcessingBehaviour>().profile;
 
 			GameObjectRecorder recorder = new GameObjectRecorder(vcamRoot);
-			recorder.BindAll(vcamRoot, false);
+			recorder.BindAll(vcamRoot, true);
 			
 			PlayableDirector pd = TimelineGO.GetComponent<PlayableDirector>();
 			TimelineAsset ta = pd.playableAsset as TimelineAsset;
@@ -184,6 +184,7 @@ namespace VCR {
 			float fov, focalDistance, aperture;
 			while ( recording ) {
 				vcamRoot.transform.position = Camera.main.transform.position;
+				vcamRoot.transform.rotation = Camera.main.transform.rotation;
 
 				TouchOSCCamera.GetData(out fov, out focalDistance, out aperture );
 				
@@ -208,7 +209,8 @@ namespace VCR {
 
 			//store recording as animation of virtual camera
 			recorder.SaveToClip(clip);
-			recorder.ResetRecording();
+			AssetDatabase.SaveAssets();
+			//recorder.ResetRecording();
 
 			cmTimelineClip.duration = timelineAnimClip.duration = clip.length;
 			

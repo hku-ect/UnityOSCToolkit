@@ -28,24 +28,21 @@ namespace VCR {
 				return;
 			}
 			
-			fov = instance.fov;
-			focalDistance = instance.focalDistance;
-			aperture = instance.aperture;
+			fov = instance.cameraProps.fov;
+			focalDistance = instance.cameraProps.focalDistance;
+			aperture = instance.cameraProps.aperture;
 		}
 
 		public static Callback onStartRecording;
 		public static Callback onStopRecording;
 
 		public PostProcessingProfile postfx;
+		public OSCCameraProperties cameraProps;
 		public int OSCPort = 6201;
 
 		OSCServer server;
 
 		DepthOfFieldModel.Settings settings;
-
-		float fov;
-		float focalDistance;
-		float aperture;
 
 		CinemachineBrain mainCameraBrain;
 
@@ -84,13 +81,13 @@ namespace VCR {
 		void PacketReceived( OSCServer sender, OSCPacket packet ) {
 			switch( packet.Address ) {
 				case "/1/fov":
-					fov = (float)packet.Data[0];
+					cameraProps.fov = (float)packet.Data[0];
 				break;
 				case "/1/focalDistance":
-					focalDistance = (float)packet.Data[0];
+					cameraProps.focalDistance = (float)packet.Data[0];
 				break;
 				case "/1/aperture":
-					aperture = Mathf.Pow((float)packet.Data[0] / 12.0f, 4) * 12;
+					cameraProps.aperture = Mathf.Pow((float)packet.Data[0] / 12.0f, 4) * 12;
 				break;
 				case "/1/start":
 					recordEvent = true;
@@ -102,7 +99,7 @@ namespace VCR {
 		}
 
 		public void ApplyProperties() {
-			Debug.Log("Applying Settings");
+			//Debug.Log("Applying Settings");
 
 			if ( mainCameraBrain == null ) {
 				mainCameraBrain = Camera.main.GetComponent<CinemachineBrain>();
@@ -110,13 +107,13 @@ namespace VCR {
 
 			if ( mainCameraBrain.ActiveVirtualCamera != null ) {
 				CinemachineVirtualCamera vcam = mainCameraBrain.ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
-				vcam.m_Lens.FieldOfView = fov;
+				vcam.m_Lens.FieldOfView = cameraProps.fov;
 			}
 			
-			Camera.main.fieldOfView = fov;
+			Camera.main.fieldOfView = cameraProps.fov;
 
-			settings.aperture = aperture;
-			settings.focusDistance = focalDistance;
+			settings.aperture = cameraProps.aperture;
+			settings.focusDistance = cameraProps.focalDistance;
 
 			postfx.depthOfField.settings = settings;
 		}

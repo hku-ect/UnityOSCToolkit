@@ -197,6 +197,7 @@ namespace HKUECT {
 
 		// Update is called once per frame
 		void PacketReceived(OSCServer sender, OSCPacket Packet) {
+			//Debug.Log(Packet.Address);
 			if (Packet.IsBundle()) {
 				if ( onBundleReceived != null ) {
 					onBundleReceived(Packet as OSCBundle);

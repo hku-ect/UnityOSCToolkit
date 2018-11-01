@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
@@ -13,7 +13,7 @@ namespace VCR {
 		bool running = false;
 
 		IEnumerator Start() {
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(3f);
 
 			pd = GetComponent<PlayableDirector>();
 

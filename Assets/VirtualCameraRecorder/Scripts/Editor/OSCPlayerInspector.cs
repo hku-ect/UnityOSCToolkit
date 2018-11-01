@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HKUECT;
@@ -230,8 +230,8 @@ public class OSCPlayerInspector : Editor
 
     void ApplySkeleton(List<OSCDataInstance> Data, Transform parent)
     {
-        //name			0
-        //id			1
+        //id			0
+        //name			1
 
         //PER JOINT (until out of range)
         //jointname		2 + jointIndex * 12
