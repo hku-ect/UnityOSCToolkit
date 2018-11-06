@@ -8,7 +8,6 @@ namespace HKUECT {
 	public class OSCPlayer : MonoBehaviour {
 
 		public OSCMocapTake take;
-		public string bakeName = "";
 		public OSCMapping mapping;
 		public int sendPort = 6200;
 		OSCClient client;

@@ -95,6 +95,12 @@ namespace VCR {
 				case "/1/stop":
 					stopEvent = true;
 				break;
+				case "/1/pause":
+					TimelineSync.Pause();
+				break;
+				case "/1/resume":
+					TimelineSync.Resume();
+				break;
 			}
 		}
 

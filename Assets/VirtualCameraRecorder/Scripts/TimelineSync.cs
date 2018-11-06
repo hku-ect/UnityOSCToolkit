@@ -7,10 +7,36 @@ using UnityEngine.Playables;
 namespace VCR {
 	public class TimelineSync : MonoBehaviour {
 
+		static TimelineSync instance;
+
+		public static bool Running {
+			get {
+				if (instance == null) return false;
+				return instance.paused;
+			}
+		}
+
+		public static void Pause() {
+			if ( instance ) {
+				instance.paused = true;
+			}
+		}
+
+		public static void Resume() {
+			if (instance) {
+				instance.paused = false;
+			}
+		}
+
 		public AnimationClip masterClip;
 
 		PlayableDirector pd;
 		bool running = false;
+		bool paused = false;
+
+		void Awake() {
+			instance = this;
+		}
 
 		IEnumerator Start() {
 			yield return new WaitForSeconds(3f);
@@ -31,7 +57,8 @@ namespace VCR {
 		// Update is called once per frame
 		void Update () {
 			if (running) {
-				pd.time += Time.deltaTime;
+				if ( !paused ) pd.time += Time.deltaTime;
+
 				if (pd.time > masterClip.length) {
 					pd.time -= masterClip.length;
 				}

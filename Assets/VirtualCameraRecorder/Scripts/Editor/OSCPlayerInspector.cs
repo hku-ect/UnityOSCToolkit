@@ -5,7 +5,6 @@ using HKUECT;
 using UnityEditor;
 using UnityEditor.Experimental.Animations;
 using UnityEditor.Animations;
-using System.IO;
 
 public class MecanimSetupData
 {
@@ -60,18 +59,7 @@ public class OSCPlayerInspector : Editor
                 flipX = true;
             }
 
-            if ( string.IsNullOrEmpty(p.bakeName) ) {
-                p.bakeName = p.take.name;
-            }
-
-            string fullFolderPath = Path.Combine( Application.dataPath, "VirtualCameraRecorder/BakedOSCAnimations/" + p.bakeName );
-
-            if ( Directory.Exists( fullFolderPath ) ) {
-                Debug.LogError("Prefab folder already exists. Please delete this folder if you wish to replace that bake.");
-                return;
-            }
-
-            GameObject parent = new GameObject(p.bakeName);
+            GameObject parent = new GameObject(p.take.name);
             gameObjectMap = new Dictionary<string, GameObject>();
             skeletons = new Dictionary<string, SkeletonDefinition>();
             mecanimSetups = new Dictionary<string, MecanimSetupData>();
@@ -114,6 +102,7 @@ public class OSCPlayerInspector : Editor
             ApplyFrame(p.take.frameBundles[0], parent.transform);
             long currentTicks = p.take.frameTimes[0];
 
+
             //record first frame
             recorder.TakeSnapshot(0);
 
@@ -134,15 +123,15 @@ public class OSCPlayerInspector : Editor
             //prepare anim clip for recorder data
             AnimationClip clip = new AnimationClip
             {
-                name = p.bakeName
+                name = p.take.name
             };
             UnityEditor.AnimationUtility.SetGenerateMotionCurves(clip, true);
 
-            AssetDatabase.CreateFolder("Assets/VirtualCameraRecorder/BakedOSCAnimations", p.bakeName);
-            string folder = "Assets/VirtualCameraRecorder/BakedOSCAnimations/" + p.bakeName + "/";
+            AssetDatabase.CreateFolder("Assets/VirtualCameraRecorder/BakedOSCAnimations", p.take.name);
+            string folder = "Assets/VirtualCameraRecorder/BakedOSCAnimations/" + p.take.name + "/";
 
             //create asset for clip
-            AssetDatabase.CreateAsset(clip, folder + p.bakeName + ".anim");
+            AssetDatabase.CreateAsset(clip, folder + p.take.name + ".anim");
             //save clip from recorder
             recorder.SaveToClip(clip);
 
@@ -165,7 +154,7 @@ public class OSCPlayerInspector : Editor
 			*/
 
             //create prefab for entire object
-            PrefabUtility.CreatePrefab(folder + p.bakeName + ".prefab", parent);
+            PrefabUtility.CreatePrefab(folder + p.take.name + ".prefab", parent);
 
             AssetDatabase.SaveAssets();
         }

@@ -36,7 +36,7 @@ namespace VCR {
 
 		// Update is called once per frame
 		void Update () {
-			if ( focalDistance != focalDistance || aperture != aperture ) {
+			if ( focalDistance != _focalDistance || aperture != _aperture ) {
 				Apply();
 			}
 		}

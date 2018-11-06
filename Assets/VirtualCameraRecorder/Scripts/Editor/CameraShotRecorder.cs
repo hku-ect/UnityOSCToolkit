@@ -73,8 +73,10 @@ namespace VCR {
 				}
 			}
 			else if ( state == PlayModeStateChange.EnteredPlayMode ) {
-				CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
-				if ( brain ) brain.enabled = false;
+				if (Camera.main) {
+					CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
+					if (brain) brain.enabled = false;
+				}
 			}
 		}
 
@@ -186,8 +188,8 @@ namespace VCR {
 				vcamRoot.transform.position = Camera.main.transform.position;
 				vcamRoot.transform.rotation = Camera.main.transform.rotation;
 
-				TouchOSCCamera.GetData(out fov, out focalDistance, out aperture );
-				
+				TouchOSCCamera.GetData(out fov, out focalDistance, out aperture);
+
 				Camera.main.fieldOfView = fov;
 				vcam.m_Lens.FieldOfView = fov;
 
@@ -200,7 +202,7 @@ namespace VCR {
 
 				recorder.TakeSnapshot(Time.deltaTime);
 
-				if ( Time.frameCount % 30 == 0 ) recordCanvas.enabled = !recordCanvas.enabled;
+				if (Time.frameCount % 30 == 0) recordCanvas.enabled = !recordCanvas.enabled;
 
 				yield return null;
 			}
@@ -213,7 +215,24 @@ namespace VCR {
 			//recorder.ResetRecording();
 
 			cmTimelineClip.duration = timelineAnimClip.duration = clip.length;
-			
+
+			float offset = (float) ( (cmTimelineClip.start + clip.length) - pd.time );
+
+			cmTimelineClip.clipIn = offset;
+			timelineAnimClip.clipIn = offset;
+			cmTimelineClip.duration -= offset;
+			timelineAnimClip.duration -= offset;
+			/*
+			if ( ( offset - pd.time ) < 0 ) {
+				//hoe dan
+
+			}
+			else {
+				cmTimelineClip.start -= offset;
+				timelineAnimClip.start -= offset;
+			}
+			*/
+
 			pd.RebuildGraph();
 			mainBrain.enabled = true;
 
