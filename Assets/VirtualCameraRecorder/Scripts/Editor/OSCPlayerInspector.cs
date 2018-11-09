@@ -320,7 +320,8 @@ public class OSCPlayerInspector : Editor
         {
             setup = new MecanimSetupData();
             SpawnSkeleton(ref setup, def);
-            MecanimSetup(ref setup, def, parent);
+			CacheBoneNameMap(OptitrackBoneNameConvention.Motive, def.name);
+			MecanimSetup(ref setup, def, parent);
             mecanimSetups.Add(name, setup);
         }
 
@@ -342,6 +343,7 @@ public class OSCPlayerInspector : Editor
     {
         GameObject root = GameObject.Find(def.name + "_root");
         setup.m_rootObject = root;
+		Debug.Log(root.name);
         setup.DestinationAvatar = gameObjectMap[def.name].GetComponent<Animator>().avatar;
         setup.jointTransforms = new List<Transform>();
 

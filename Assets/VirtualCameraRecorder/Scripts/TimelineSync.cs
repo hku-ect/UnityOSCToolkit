@@ -9,6 +9,9 @@ namespace VCR {
 
 		static TimelineSync instance;
 
+		public float length;
+		public bool useMasterClip;
+
 		public static bool Running {
 			get {
 				if (instance == null) return false;
@@ -42,25 +45,35 @@ namespace VCR {
 			yield return new WaitForSeconds(3f);
 
 			pd = GetComponent<PlayableDirector>();
-
-			if ( masterClip == null ) {
-				pd.timeUpdateMode = DirectorUpdateMode.GameTime;
-				enabled = false;	
+			if (useMasterClip) {
+				if (masterClip == null) {
+					pd.timeUpdateMode = DirectorUpdateMode.GameTime;
+					enabled = false;
+				}
+				else {
+					pd.timeUpdateMode = DirectorUpdateMode.Manual;
+				}
 			}
 			else {
 				pd.timeUpdateMode = DirectorUpdateMode.Manual;
 			}
-
 			running = true;
 		}
 		
 		// Update is called once per frame
 		void Update () {
 			if (running) {
-				if ( !paused ) pd.time += Time.deltaTime;
+				if (!paused) pd.time += Time.deltaTime;
 
-				if (pd.time > masterClip.length) {
-					pd.time -= masterClip.length;
+				if (useMasterClip) {
+					if (pd.time > masterClip.length) {
+						pd.time -= masterClip.length;
+					}
+				}
+				else {
+					if (pd.time > length) {
+						pd.time -= length;
+					}
 				}
 				pd.Evaluate();
 			}
