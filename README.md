@@ -12,6 +12,7 @@ Included is a modified version of the UnityOSC library (https://github.com/jorge
 Since this implementation relies heavily on the NatNet2OSCBridge, make sure you've set that up first, which means you'll need the following:
 
 * A computer running Motive
+  * In streaming tab the skeleton setting should be set to "Motive"
 * A live or pre-recorded motion capture take
 * A computer running the NatNet2OSCBridge (currently untested on Windows)
 * (Optional) A computer running the GearVRHandshaker (only necessary if you intend to use GearVRs and/or vertical walking)
