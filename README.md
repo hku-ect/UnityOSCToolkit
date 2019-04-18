@@ -1,3 +1,26 @@
+# NEW: Experimental support for Package Manager for Unity 2018.3 and higher
+You can now install this using the built-in package manager. You only need to perform the following steps:
+  * Create your project
+  * Find the Packages/Manifest.json file
+  * Add the scopedRegistry section to the bottom of the manifest (dont forget the , after the dependencies }) 
+<pre>
+ {
+  "dependencies": {
+    ...
+  }<font color="green">,
+  "scopedRegistries": [
+    {
+      "name": "HKUECT",
+      "url": "http://37.97.171.71:4873/",
+      "scopes": [
+        "nl.hku"
+      ]
+    }
+  ]</font>
+}
+</pre>
+  
+
 # UnityOSCToolkit
 Unity client implementation for the NatNet2OSCBridge. Supports Rigidbodies &amp; Skeletons (specifically in "Full Skeleton" mode).
 
