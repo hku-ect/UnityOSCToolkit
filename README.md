@@ -19,6 +19,8 @@ You can now install this using the built-in package manager. You only need to pe
   ]</font>
 }
 </pre>
+  * Restart Unity, and open the Window -> Package Manager
+  * You may need to select "display preview packages" for some of our pre-1.0.0 packages
   
 
 # UnityOSCToolkit
