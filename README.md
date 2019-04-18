@@ -1,5 +1,5 @@
 # NEW: Experimental support for Package Manager for Unity 2018.3 and higher
-You can now install this using the built-in package manager. You only need to perform the following steps:
+You can now install this using the built-in package manager. You only need to perform the following steps (you need to repeat these steps each time you create a new project):
   * Create your project
   * Find the Packages/Manifest.json file in the root folder of your project
   * Add the scopedRegistry section to the bottom of the manifest (dont forget the , after the dependencies }) 
