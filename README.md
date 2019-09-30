@@ -18,7 +18,7 @@ You can now install this using the built-in package manager. You only need to pe
 </pre>
 
 **Make sure it looks like this** 
-<img src="http://pong.hku.nl/~aaron.oostdijk/unity/paste_img_s.png" width="300px" />
+<br><img src="http://pong.hku.nl/~aaron.oostdijk/unity/paste_img_s.png" width="300px" />
 
 
   * Restart Unity, and open the **Window -> Package Manager**
