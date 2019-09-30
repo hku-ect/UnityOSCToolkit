@@ -15,6 +15,7 @@ Since this implementation relies heavily on the NatNet2OSCBridge, make sure you'
   * In streaming tab the skeleton setting should be set to "Motive"
 * A live or pre-recorded motion capture take
 * A computer running the [NatNet2OSCBridge](http://github.com/hku-ect/NatNet2OSCBridge/)
+  * **Make sure** the NatNet2OSCBridge clients for Unity always have **Velocity** and **Full Skeleton** flags *enabled*, and **Hierarchy** *disabled* 
 
 Once you have these things setup, you can download or clone this repository and open it using Unity 5.5+
 
