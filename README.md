@@ -1,13 +1,11 @@
 # NEW: Experimental Package Manager support for Unity 2018.3 and higher
 You can now install this using the built-in package manager. You only need to perform the following steps (you need to repeat these steps each time you create a new project):
   * Create your project
-  * Find the Packages/Manifest.json file in the root folder of your project
-  * Add the scopedRegistry section to the bottom of the manifest (dont forget the , after the dependencies }) 
+  * Find the **Packages/Manifest.json** file in the root folder of your project
+  * **Edit** this file with a text editor, and add the following lines: 
+
 <pre>
- {
-  "dependencies": {
-    ...
-  }<font color="green">,
+  ,
   "scopedRegistries": [
     {
       "name": "HKUECT",
@@ -16,11 +14,15 @@ You can now install this using the built-in package manager. You only need to pe
         "nl.hku"
       ]
     }
-  ]</font>
-}
+  ]
 </pre>
-  * Restart Unity, and open the Window -> Package Manager
-  * You may need to select "display preview packages" for some of our pre-1.0.0 packages
+
+**Make sure it looks like this** 
+![How it should look](http://pong.hku.nl/~aaron.oostdijk/unity/paste_img.png)
+
+
+  * Restart Unity, and open the **Window -> Package Manager**
+  * You may need to select **Advanced -> Show preview packages** for some of our pre-1.0.0 packages
   
 
 # UnityOSCToolkit
