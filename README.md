@@ -1,31 +1,3 @@
-# NEW: Experimental Package Manager support for Unity 2018.3 and higher
-You can now install this using the built-in package manager. You only need to perform the following steps (you need to repeat these steps each time you create a new project):
-  * Create your project
-  * Find the **Packages/Manifest.json** file in the root folder of your project
-  * **Edit** this file with a text editor, and add the following lines: 
-
-<pre>
-  ,
-  "scopedRegistries": [
-    {
-      "name": "HKUECT",
-      "url": "http://37.97.171.71:4873/",
-      "scopes": [
-        "nl.hku"
-      ]
-    }
-  ]
-</pre>
-
-**Make sure it looks like this** 
-<br><img src="http://pong.hku.nl/~aaron.oostdijk/unity/paste_img_s.png" width="300px" />
-
-
-  * Restart Unity, and open the **Window -> Package Manager**
-  * You may need to select **Advanced -> Show preview packages** for some of our pre-1.0.0 packages
-  * Find the package you want, in this case **OSC Toolkit**, and click *Install* to import the package
-  
-
 # UnityOSCToolkit
 Unity client implementation for the NatNet2OSCBridge. Supports Rigidbodies &amp; Skeletons (specifically in "Full Skeleton" mode).
 
@@ -42,10 +14,11 @@ Since this implementation relies heavily on the NatNet2OSCBridge, make sure you'
 * A computer running Motive
   * In streaming tab the skeleton setting should be set to "Motive"
 * A live or pre-recorded motion capture take
-* A computer running the NatNet2OSCBridge (currently untested on Windows)
-* (Optional) A computer running the GearVRHandshaker (only necessary if you intend to use GearVRs and/or vertical walking)
+* A computer running the [NatNet2OSCBridge](http://github.com/hku-ect/NatNet2OSCBridge/)
 
 Once you have these things setup, you can download or clone this repository and open it using Unity 5.5+
+
+[**Work in progress guides are available on the wiki**](https://github.com/hku-ect/UnityOSCToolkit/wiki)
 
 ### Class Overview
 
