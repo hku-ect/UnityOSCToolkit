@@ -19,7 +19,7 @@ Since this implementation relies heavily on the NatNet2OSCBridge, make sure you'
 Once you have these things setup, you can download or clone this repository and open it using Unity 5.5+
 
 [**Work in progress guides are available on the wiki**](https://github.com/hku-ect/UnityOSCToolkit/wiki)
-Below is a technical overview of how the toolkit can be used and the basic ideas behind its construction. "Step-by-step" guides will be found on the Wiki, but we're still in the process of moving them over.
+<br>Below is a technical overview of how the toolkit can be used and the basic ideas behind its construction. "Step-by-step" guides will be found on the Wiki, but we're still in the process of moving them over.
 
 ---
 
