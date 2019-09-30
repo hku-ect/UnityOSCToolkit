@@ -18,11 +18,12 @@ You can now install this using the built-in package manager. You only need to pe
 </pre>
 
 **Make sure it looks like this** 
-![How it should look](http://pong.hku.nl/~aaron.oostdijk/unity/paste_img.png)
+<img src="http://pong.hku.nl/~aaron.oostdijk/unity/paste_img_s.png" width="300px" />
 
 
   * Restart Unity, and open the **Window -> Package Manager**
   * You may need to select **Advanced -> Show preview packages** for some of our pre-1.0.0 packages
+  * Find the package you want, in this case **OSC Toolkit**, and click *Install* to import the package
   
 
 # UnityOSCToolkit
