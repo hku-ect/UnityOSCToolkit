@@ -64,13 +64,28 @@ public class OSCTester : EditorWindow
 
     void PackedReceived(OSCServer sender, OSCPacket packet)
     {
-        if (messages.ContainsKey(packet.Address))
+        if ( packet.IsBundle() )
         {
-            messages[packet.Address]++;
+            foreach( OSCMessage m in packet.Data)
+            {
+                HandleMessage(m);
+            }
         }
         else
         {
-            messages.Add(packet.Address, 1);
+            HandleMessage(packet as OSCMessage);
+        }
+    }
+
+    void HandleMessage(OSCMessage m)
+    {
+        if (messages.ContainsKey(m.Address))
+        {
+            messages[m.Address]++;
+        }
+        else
+        {
+            messages.Add(m.Address, 1);
         }
 
         dirty = true;
