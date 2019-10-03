@@ -250,8 +250,12 @@ namespace UnityOSC
                     PacketReceivedEvent(this, _lastReceivedPacket);	
 				}
 			}
-			catch{
-				throw new Exception(String.Format("Can't create server at port {0}", _localPort));
+			catch (System.Exception e){
+                //Don't throw errors on empty exceptions (caused by normal thread aborts)
+                if (!string.IsNullOrEmpty(e.Message))
+                {
+                    throw new Exception(String.Format("Can't create server at port {0}", _localPort));
+                }
   			}
 		}
 		
