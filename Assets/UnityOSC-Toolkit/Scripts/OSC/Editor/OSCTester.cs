@@ -145,7 +145,16 @@ public class OSCTester : EditorWindow
 
         foreach ( KeyValuePair<string,int> pair in messages)
         {
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("("+pair.Value+"): "+pair.Key);
+            if ( GUILayout.Button("Copy"))
+            {
+                var textEditor = new TextEditor();
+                textEditor.text = pair.Key;
+                textEditor.SelectAll();
+                textEditor.Copy();
+            }
+            EditorGUILayout.EndHorizontal();
         }
     }
 }

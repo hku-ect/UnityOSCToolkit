@@ -254,7 +254,7 @@ namespace UnityOSC
                 //Don't throw errors on empty exceptions (caused by normal thread aborts)
                 if (!string.IsNullOrEmpty(e.Message))
                 {
-                    throw new Exception(String.Format("Can't create server at port {0}", _localPort));
+                    throw new Exception(String.Format("Problem with server at port {0}. Error msg: {1}", _localPort, e.Message));
                 }
   			}
 		}
