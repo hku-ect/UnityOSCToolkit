@@ -1,7 +1,7 @@
 ﻿{
   "name": "nl.hku.osctoolkit",
   "displayName": "OSC Toolkit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "unity": "2018.3",
   "description": "Collection of classes and examples to work with OSC and the NatNet2OSCBridge (Motion Capture) inside Unity.",
   "keywords": [ "package", "unity", "mocap", "osc" ],
